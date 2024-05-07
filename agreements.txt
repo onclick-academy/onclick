@@ -1,0 +1,14 @@
+- for iconst we use react-icons => https://react-icons.github.io/react-icons/
+
+- shadcn => https://shadcn.com/ make sure you install what you need first!!
+
+- colors => https://coolors.co/437ca2-7793a6-aaaaaa-a9bbbd-a7cbcf-a4ebf3-b8eff4-ccf2f4-f5fafa
+
+---
+  --primary: #4682A9; -> for bgcolor button and primary text
+  --secondary: #F5FAFA 
+  --tertiary: #CCF2F4
+  --quaternary: #A4EBF3
+  --quinary: #A7CBCF
+  --senary: #00A6FB -----> for tags Or icons
+  --septenary: #FFE3E3 /
