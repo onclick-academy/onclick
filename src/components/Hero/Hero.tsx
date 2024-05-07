@@ -38,7 +38,7 @@ export default function Hero() {
             <strong className='underline underline-offset-2'>easiest</strong> template ever.
           </p>
         </div>
-        <Button className='bg-primary w-48 h-14'>Get Started</Button>
+        <Button className='bg-septenary w-48 h-14'>Get Started</Button>
 
         <div className='flex-1'>
           <div>
