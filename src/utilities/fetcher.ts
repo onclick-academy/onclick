@@ -1,4 +1,3 @@
-import Cookies from 'universal-cookie'
 
 type FetcherT = {
   url: string
@@ -18,7 +17,7 @@ export const authFetcher = async ({ body = {}, action }: AuthFetcherT) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*'
+      // 'Access-Control-Allow-Origin': '*'
     },
     body: JSON.stringify(body)
   })

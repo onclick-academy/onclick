@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 
 const FormSchema = z.object({
   email: z.string().email({
@@ -46,20 +47,20 @@ export default function LoginPage() {
       body: JSON.stringify(data)
     }).then(res => res.json())
     console.log(res)
-
     const resJson = res.data
     console.log(resJson)
     if (res.status === 'success') {
+      // toast('Logged in Successfully') // TODO: Not Working
       router.push('/')
       localStorage.setItem('accessToken', res.accessToken)
-      localStorage.setItem('refreshToken', res.refreshToken)
+      data.isRememberMe && localStorage.setItem('refreshToken', res.refreshToken)
       localStorage.setItem('userId', resJson.id)
     } else {
       setLoginError('Email or pasword is incorrect')
     }
   }
 
-  localStorage && localStorage.getItem('accessToken') && localStorage.getItem('refreshToken') ? router.push('/') : null
+  localStorage && localStorage.getItem('accessToken') ? router.push('/') : null
   return (
     <div className='flex justify-center items-center h-screen bg-secondary'>
       <div className='w-96 flex flex-col border-1 border-quinary bg-white rounded-lg p-4 shadow-lg bg-secondary'>
@@ -95,27 +96,32 @@ export default function LoginPage() {
                 </FormItem>
               )}
             />
+            <div className='flex justify-between'>
+              <FormItem className='my-auto ms-0'>
+                <Checkbox
+                  id='isRememberMe'
+                  onClick={() => {
+                    {
+                      form.setValue('isRememberMe', !form.getValues('isRememberMe'))
+                    }
+                  }}
+                />
+                <label
+                  htmlFor='isRememberMe'
+                  className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 px-1'
+                >
+                  Remember Me
+                </label>
+              </FormItem>
+              {/* <a href="http://localhost:3001/auth/forgetpassword">forget your password?</a> */}
 
-            <FormItem className='my-auto ms-0'>
-              <Checkbox
-                id='isRememberMe'
-                onClick={() => {
-                  {
-                    form.setValue('isRememberMe', !form.getValues('isRememberMe'))
-                  }
-                }}
-              />
-              <label
-                htmlFor='isRememberMe'
-                className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 px-1'
+              <a
+                href='http://localhost:3001/forgetpassword'
+                className='text-senary text-xs hover:text-primary hover:shadow-2xl'
               >
-                Remember Me
-              </label>
-            </FormItem>
-            {/* <a href="http://localhost:3001/auth/forgetpassword">forget your password?</a> */}
-
-            <a href="http://localhost:3001/forgetpassword" className="text-senary text-xs hover:text-primary hover:shadow-2xl">forget your password?</a>
-
+                forget your password?
+              </a>
+            </div>
 
             <div className='flex justify-end'>
               <Button className='bg-primary hover:border-senary m-1' type='submit'>
