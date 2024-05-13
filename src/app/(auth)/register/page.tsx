@@ -232,25 +232,6 @@ export default function LoginPage() {
                 )}
               />
             </div>
-
-            {/* <FormField
-              control={form.control}
-              name='gender'
-              render={({ field }) => (
-                <FormItem>
-                  <Select>
-                    <SelectTrigger className=''>
-                      <SelectValue placeholder='Gender' />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value='MALE'>Male</SelectItem>
-                      <SelectItem value='FEMALE'>Female</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormItem>
-              )}
-            /> */}
-
             <div className='flex justify-between'>
               <FormField
                 control={form.control}
@@ -260,17 +241,6 @@ export default function LoginPage() {
                     <FormControl>
                       <Input type='date' placeholder='Birth Date' {...field} />
                     </FormControl>
-                    {/* <Popover>
-                    <PopoverTrigger asChild>
-                    <Button variant={'outline'} className={cn('w-full', !date && 'text-muted-foreground')}>
-                    <CalendarIcon className='mr-2 h-4 w-4' />
-                    {date ? format(date, 'PPP') : <span>Birth Date</span>}
-                    </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className='w-auto p-0'>
-                    <Calendar mode='single' selected={date} onSelect={setDate} initialFocus />
-                    </PopoverContent>
-                  </Popover> */}
                     <FormMessage />
                     <p className='text-sm font-medium text-destructive'>{birthDateError}</p>
                   </FormItem>
@@ -310,7 +280,7 @@ export default function LoginPage() {
             <div className='my-1 mx-1'>
               <a href='http://localhost:3001/login' className='text-senary text-xs hover:text-primary hover:shadow-2xl'>
                 already have an account? Log in
-              </a>
+              </a> // TODO use Link
             </div>
 
             <div className='flex justify-end'>
