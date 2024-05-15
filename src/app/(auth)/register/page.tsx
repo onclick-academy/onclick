@@ -7,18 +7,12 @@ import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Checkbox } from '@/components/ui/checkbox'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Calendar as CalendarIcon } from 'lucide-react'
-import { format } from 'date-fns'
-import { cn } from '@/lib/utils'
-import { Calendar } from '@/components/ui/calendar'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-
+import { authFetcher } from '@/utilities/fetcher'
+import Link from 'next/link'
+import getData from '@/utilities/getUserData'
 
 const FormSchema = z.object({
   firstName: z.string().min(2, {
@@ -49,7 +43,7 @@ const FormSchema = z.object({
   })
 })
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -65,14 +59,26 @@ export default function LoginPage() {
   })
 
   const [error, setError] = useState('')
-  const [date, setDate] = useState<Date>()
   const [emailError, setEmailError] = useState('')
   const [usernameError, setUsernameError] = useState('')
   const [phoneNumError, setPhoneNumError] = useState('')
   const [birthDateError, setBirthDateError] = useState('')
   const [profilePicError, setProfilePicError] = useState('') // TODO
 
+  const [userData, setUserData] = useState({} as any)
   const router = useRouter()
+
+  useEffect(() => {
+    const fetching = async () => {
+      const data = await getData()
+      setUserData(data)
+    }
+
+    fetching()
+  }, [])
+  if (userData.status === 'success') {
+    router.push('/')
+  }
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     console.log(data)
@@ -81,16 +87,7 @@ export default function LoginPage() {
       setError('Passwords do not match')
       return
     }
-    const res = await fetch('http://localhost:3000/api/v1/auth/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
-      body: JSON.stringify(data)
-    }).then(res => res.json())
-    console.log(res)
-
+    const res = await authFetcher({ body: data, action: 'register' })
     const resJson = res.data
     console.log(resJson)
     if (res.status === 'success') {
@@ -98,17 +95,15 @@ export default function LoginPage() {
     } else {
       console.log(res)
       if (res.error === 'Email is already in use') setEmailError(res.error)
-        else setEmailError('')
+      else setEmailError('')
       if (res.error === 'Username is already in use') setUsernameError(res.error)
-        else setUsernameError('')
+      else setUsernameError('')
       if (res.error === 'Phone Number is already in use') setPhoneNumError(res.error)
-        else setPhoneNumError('')
+      else setPhoneNumError('')
       if (res.error === 'User must be 9+ years old') setBirthDateError(res.error)
-        else setBirthDateError('')
+      else setBirthDateError('')
     }
   }
-
-  // localStorage && localStorage.getItem('accessToken') ? router.push('/') : null
 
   return (
     <div className='flex justify-center items-center h-screen bg-secondary'>
@@ -210,7 +205,7 @@ export default function LoginPage() {
                 render={({ field }) => (
                   <FormItem className='w-full'>
                     <FormControl>
-                      <Input type='file' {...field}/>
+                      <Input type='file' {...field} />
                     </FormControl>
                     <FormMessage />
                     <p className='text-sm font-medium text-destructive'>{profilePicError}</p>
@@ -233,24 +228,6 @@ export default function LoginPage() {
               />
             </div>
 
-            {/* <FormField
-              control={form.control}
-              name='gender'
-              render={({ field }) => (
-                <FormItem>
-                  <Select>
-                    <SelectTrigger className=''>
-                      <SelectValue placeholder='Gender' />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value='MALE'>Male</SelectItem>
-                      <SelectItem value='FEMALE'>Female</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormItem>
-              )}
-            /> */}
-
             <div className='flex justify-between'>
               <FormField
                 control={form.control}
@@ -260,17 +237,6 @@ export default function LoginPage() {
                     <FormControl>
                       <Input type='date' placeholder='Birth Date' {...field} />
                     </FormControl>
-                    {/* <Popover>
-                    <PopoverTrigger asChild>
-                    <Button variant={'outline'} className={cn('w-full', !date && 'text-muted-foreground')}>
-                    <CalendarIcon className='mr-2 h-4 w-4' />
-                    {date ? format(date, 'PPP') : <span>Birth Date</span>}
-                    </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className='w-auto p-0'>
-                    <Calendar mode='single' selected={date} onSelect={setDate} initialFocus />
-                    </PopoverContent>
-                  </Popover> */}
                     <FormMessage />
                     <p className='text-sm font-medium text-destructive'>{birthDateError}</p>
                   </FormItem>
@@ -308,9 +274,12 @@ export default function LoginPage() {
             </div>
 
             <div className='my-1 mx-1'>
-              <a href='http://localhost:3001/login' className='text-senary text-xs hover:text-primary hover:shadow-2xl'>
+              <Link
+                href='http://localhost:3001/login'
+                className='text-senary text-xs hover:text-primary hover:shadow-2xl'
+              >
                 already have an account? Log in
-              </a>
+              </Link>
             </div>
 
             <div className='flex justify-end'>
