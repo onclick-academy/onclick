@@ -1,4 +1,3 @@
-
 type FetcherT = {
   url: string
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
@@ -14,18 +13,18 @@ type AuthFetcherT = {
 export const authFetcher = async ({ body = {}, action, isRememberMe = false }: AuthFetcherT) => {
   console.log('object', body)
   const fullUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/${action}`
-  console.log('url ',fullUrl)
+  console.log('url ', fullUrl)
   const res = await fetch(fullUrl, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
       // 'Access-Control-Allow-Origin': '*'
     },
     body: JSON.stringify(body)
   })
   const data = await res.json()
 
-  if ( action === 'login' && res.ok) {
+  if (action === 'login' && res.ok) {
     localStorage.setItem('accessToken', data.accessToken)
     if (action === 'login' && isRememberMe) localStorage.setItem('refreshToken', data.refreshToken)
     localStorage.setItem('userId', data.data.id)

@@ -14,39 +14,41 @@ import { authFetcher } from '@/utilities/fetcher'
 import Link from 'next/link'
 import getData from '@/utilities/getUserData'
 
-const FormSchema = z.object({
-  firstName: z.string().min(2, {
-    message: 'First Name must be at least 2 characters.'
-  }),
-  lastName: z.string().min(6, {
-    message: 'Last Name must be at least 6 characters.'
-  }),
-  username: z.string().min(4, {
-    message: 'Username must be at least 4 characters.'
-  }),
-  phoneNum: z.string().min(10, {
-    message: 'Phone Number must be at least 10 characters.'
-  }),
-  profilePic: z.string().optional(),
-  birthDate: z.string().refine((val) => !isNaN(Date.parse(val)), {
-    message: 'Birth Date must be a valid date.'
-  }),
-  email: z.string().email({
-    message: 'Email must be a valid Email.'
-  }),
-  password: z.string().min(6, {
-    message: 'Password must be at least 6 characters.'
-  }),
-  passwordConfirm: z.string().min(6, {
-    message: 'Password Confirm must be at least 6 characters.'
-  }),
-  gender: z.enum(['MALE', 'FEMALE'], {
-    message: 'Gender must be either Male or Female'
+const FormSchema = z
+  .object({
+    firstName: z.string().min(2, {
+      message: 'First Name must be at least 2 characters.'
+    }),
+    lastName: z.string().min(6, {
+      message: 'Last Name must be at least 6 characters.'
+    }),
+    username: z.string().min(4, {
+      message: 'Username must be at least 4 characters.'
+    }),
+    phoneNum: z.string().min(10, {
+      message: 'Phone Number must be at least 10 characters.'
+    }),
+    profilePic: z.string().optional(),
+    birthDate: z.string().refine(val => !isNaN(Date.parse(val)), {
+      message: 'Birth Date must be a valid date.'
+    }),
+    email: z.string().email({
+      message: 'Email must be a valid Email.'
+    }),
+    password: z.string().min(6, {
+      message: 'Password must be at least 6 characters.'
+    }),
+    passwordConfirm: z.string().min(6, {
+      message: 'Password Confirm must be at least 6 characters.'
+    }),
+    gender: z.enum(['MALE', 'FEMALE'], {
+      message: 'Gender must be either Male or Female'
+    })
   })
-}).refine((data) => data.password === data.passwordConfirm, {
-  path: ['passwordConfirm'],
-  message: 'Passwords do not match'
-})
+  .refine(data => data.password === data.passwordConfirm, {
+    path: ['passwordConfirm'],
+    message: 'Passwords do not match'
+  })
 
 export default function RegisterPage() {
   const form = useForm<z.infer<typeof FormSchema>>({
