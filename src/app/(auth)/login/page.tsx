@@ -12,7 +12,6 @@ import { use, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { authFetcher, fetcher } from '@/utilities/fetcher'
 import Link from 'next/link'
-import { get } from 'http'
 import getData from '@/utilities/getUserData'
 
 const FormSchema = z.object({

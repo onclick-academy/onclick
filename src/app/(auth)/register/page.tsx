@@ -27,8 +27,10 @@ const FormSchema = z.object({
   phoneNum: z.string().min(10, {
     message: 'Phone Number must be at least 10 characters.'
   }),
-  profilePic: z.string(),
-  birthDate: z.string().date(),
+  profilePic: z.string().optional(),
+  birthDate: z.string().refine((val) => !isNaN(Date.parse(val)), {
+    message: 'Birth Date must be a valid date.'
+  }),
   email: z.string().email({
     message: 'Email must be a valid Email.'
   }),
@@ -36,11 +38,14 @@ const FormSchema = z.object({
     message: 'Password must be at least 6 characters.'
   }),
   passwordConfirm: z.string().min(6, {
-    message: 'Password must be at least 6 characters.'
+    message: 'Password Confirm must be at least 6 characters.'
   }),
   gender: z.enum(['MALE', 'FEMALE'], {
-    message: 'gender must be either Male or Female'
+    message: 'Gender must be either Male or Female'
   })
+}).refine((data) => data.password === data.passwordConfirm, {
+  path: ['passwordConfirm'],
+  message: 'Passwords do not match'
 })
 
 export default function RegisterPage() {
@@ -54,17 +59,12 @@ export default function RegisterPage() {
       birthDate: '',
       email: '',
       password: '',
-      gender: 'MALE' || 'FEMALE'
+      passwordConfirm: '',
+      gender: 'MALE'
     }
   })
 
-  const [error, setError] = useState('')
-  const [emailError, setEmailError] = useState('')
-  const [usernameError, setUsernameError] = useState('')
-  const [phoneNumError, setPhoneNumError] = useState('')
-  const [birthDateError, setBirthDateError] = useState('')
-  const [profilePicError, setProfilePicError] = useState('') // TODO
-
+  const { setError, clearErrors } = form
   const [userData, setUserData] = useState({} as any)
   const router = useRouter()
 
@@ -81,12 +81,7 @@ export default function RegisterPage() {
   }
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    console.log(data)
-
-    if (data.password !== data.passwordConfirm) {
-      setError('Passwords do not match')
-      return
-    }
+    clearErrors()
     const res = await authFetcher({ body: data, action: 'register' })
     const resJson = res.data
     console.log(resJson)
@@ -94,14 +89,10 @@ export default function RegisterPage() {
       router.push('/login')
     } else {
       console.log(res)
-      if (res.error === 'Email is already in use') setEmailError(res.error)
-      else setEmailError('')
-      if (res.error === 'Username is already in use') setUsernameError(res.error)
-      else setUsernameError('')
-      if (res.error === 'Phone Number is already in use') setPhoneNumError(res.error)
-      else setPhoneNumError('')
-      if (res.error === 'User must be 9+ years old') setBirthDateError(res.error)
-      else setBirthDateError('')
+      if (res.error === 'Email is already in use') setError('email', { message: res.error })
+      if (res.error === 'Username is already in use') setError('username', { message: res.error })
+      if (res.error === 'Phone Number is already in use') setError('phoneNum', { message: res.error })
+      if (res.error === 'User must be 9+ years old') setError('birthDate', { message: res.error })
     }
   }
 
@@ -150,7 +141,6 @@ export default function RegisterPage() {
                       <Input type='text' placeholder='Username' {...field} />
                     </FormControl>
                     <FormMessage />
-                    <p className='text-sm font-medium text-destructive'>{usernameError}</p>
                   </FormItem>
                 )}
               />
@@ -163,7 +153,6 @@ export default function RegisterPage() {
                       <Input type='text' placeholder='Email' className='ms-2' {...field} />
                     </FormControl>
                     <FormMessage />
-                    <p className='text-sm font-medium text-destructive'>{emailError}</p>
                   </FormItem>
                 )}
               />
@@ -192,7 +181,6 @@ export default function RegisterPage() {
                       <Input type='password' placeholder='Confirm Password' className='ms-2' {...field} />
                     </FormControl>
                     <FormMessage />
-                    <p className='text-sm font-medium text-destructive'>{error}</p>
                   </FormItem>
                 )}
               />
@@ -208,7 +196,6 @@ export default function RegisterPage() {
                       <Input type='file' {...field} />
                     </FormControl>
                     <FormMessage />
-                    <p className='text-sm font-medium text-destructive'>{profilePicError}</p>
                   </FormItem>
                 )}
               />
@@ -222,7 +209,6 @@ export default function RegisterPage() {
                       <Input type='text' placeholder='Phone Number' className='ms-2' {...field} />
                     </FormControl>
                     <FormMessage />
-                    <p className='text-sm font-medium text-destructive'>{phoneNumError}</p>
                   </FormItem>
                 )}
               />
@@ -238,7 +224,6 @@ export default function RegisterPage() {
                       <Input type='date' placeholder='Birth Date' {...field} />
                     </FormControl>
                     <FormMessage />
-                    <p className='text-sm font-medium text-destructive'>{birthDateError}</p>
                   </FormItem>
                 )}
               />
