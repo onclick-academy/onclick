@@ -7,18 +7,12 @@ import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Checkbox } from '@/components/ui/checkbox'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Calendar as CalendarIcon } from 'lucide-react'
-import { format } from 'date-fns'
-import { cn } from '@/lib/utils'
-import { Calendar } from '@/components/ui/calendar'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-
+import { authFetcher } from '@/utilities/fetcher'
+import Link from 'next/link'
+import getData from '@/utilities/getUserData'
 
 const FormSchema = z.object({
   firstName: z.string().min(2, {
@@ -33,8 +27,10 @@ const FormSchema = z.object({
   phoneNum: z.string().min(10, {
     message: 'Phone Number must be at least 10 characters.'
   }),
-  profilePic: z.string(),
-  birthDate: z.string().date(),
+  profilePic: z.string().optional(),
+  birthDate: z.string().refine((val) => !isNaN(Date.parse(val)), {
+    message: 'Birth Date must be a valid date.'
+  }),
   email: z.string().email({
     message: 'Email must be a valid Email.'
   }),
@@ -42,14 +38,17 @@ const FormSchema = z.object({
     message: 'Password must be at least 6 characters.'
   }),
   passwordConfirm: z.string().min(6, {
-    message: 'Password must be at least 6 characters.'
+    message: 'Password Confirm must be at least 6 characters.'
   }),
   gender: z.enum(['MALE', 'FEMALE'], {
-    message: 'gender must be either Male or Female'
+    message: 'Gender must be either Male or Female'
   })
+}).refine((data) => data.password === data.passwordConfirm, {
+  path: ['passwordConfirm'],
+  message: 'Passwords do not match'
 })
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -60,55 +59,42 @@ export default function LoginPage() {
       birthDate: '',
       email: '',
       password: '',
-      gender: 'MALE' || 'FEMALE'
+      passwordConfirm: '',
+      gender: 'MALE'
     }
   })
 
-  const [error, setError] = useState('')
-  const [date, setDate] = useState<Date>()
-  const [emailError, setEmailError] = useState('')
-  const [usernameError, setUsernameError] = useState('')
-  const [phoneNumError, setPhoneNumError] = useState('')
-  const [birthDateError, setBirthDateError] = useState('')
-  const [profilePicError, setProfilePicError] = useState('') // TODO
-
+  const { setError, clearErrors } = form
+  const [userData, setUserData] = useState({} as any)
   const router = useRouter()
 
-  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    console.log(data)
-
-    if (data.password !== data.passwordConfirm) {
-      setError('Passwords do not match')
-      return
+  useEffect(() => {
+    const fetching = async () => {
+      const data = await getData()
+      setUserData(data)
     }
-    const res = await fetch('http://localhost:3000/api/v1/auth/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
-      body: JSON.stringify(data)
-    }).then(res => res.json())
-    console.log(res)
 
+    fetching()
+  }, [])
+  if (userData.status === 'success') {
+    router.push('/')
+  }
+
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    clearErrors()
+    const res = await authFetcher({ body: data, action: 'register' })
     const resJson = res.data
     console.log(resJson)
     if (res.status === 'success') {
       router.push('/login')
     } else {
       console.log(res)
-      if (res.error === 'Email is already in use') setEmailError(res.error)
-        else setEmailError('')
-      if (res.error === 'Username is already in use') setUsernameError(res.error)
-        else setUsernameError('')
-      if (res.error === 'Phone Number is already in use') setPhoneNumError(res.error)
-        else setPhoneNumError('')
-      if (res.error === 'User must be 9+ years old') setBirthDateError(res.error)
-        else setBirthDateError('')
+      if (res.error === 'Email is already in use') setError('email', { message: res.error })
+      if (res.error === 'Username is already in use') setError('username', { message: res.error })
+      if (res.error === 'Phone Number is already in use') setError('phoneNum', { message: res.error })
+      if (res.error === 'User must be 9+ years old') setError('birthDate', { message: res.error })
     }
   }
-
-  // localStorage && localStorage.getItem('accessToken') ? router.push('/') : null
 
   return (
     <div className='flex justify-center items-center h-screen bg-secondary'>
@@ -155,7 +141,6 @@ export default function LoginPage() {
                       <Input type='text' placeholder='Username' {...field} />
                     </FormControl>
                     <FormMessage />
-                    <p className='text-sm font-medium text-destructive'>{usernameError}</p>
                   </FormItem>
                 )}
               />
@@ -168,7 +153,6 @@ export default function LoginPage() {
                       <Input type='text' placeholder='Email' className='ms-2' {...field} />
                     </FormControl>
                     <FormMessage />
-                    <p className='text-sm font-medium text-destructive'>{emailError}</p>
                   </FormItem>
                 )}
               />
@@ -197,7 +181,6 @@ export default function LoginPage() {
                       <Input type='password' placeholder='Confirm Password' className='ms-2' {...field} />
                     </FormControl>
                     <FormMessage />
-                    <p className='text-sm font-medium text-destructive'>{error}</p>
                   </FormItem>
                 )}
               />
@@ -210,10 +193,9 @@ export default function LoginPage() {
                 render={({ field }) => (
                   <FormItem className='w-full'>
                     <FormControl>
-                      <Input type='file' {...field}/>
+                      <Input type='file' {...field} />
                     </FormControl>
                     <FormMessage />
-                    <p className='text-sm font-medium text-destructive'>{profilePicError}</p>
                   </FormItem>
                 )}
               />
@@ -227,11 +209,11 @@ export default function LoginPage() {
                       <Input type='text' placeholder='Phone Number' className='ms-2' {...field} />
                     </FormControl>
                     <FormMessage />
-                    <p className='text-sm font-medium text-destructive'>{phoneNumError}</p>
                   </FormItem>
                 )}
               />
             </div>
+
             <div className='flex justify-between'>
               <FormField
                 control={form.control}
@@ -242,7 +224,6 @@ export default function LoginPage() {
                       <Input type='date' placeholder='Birth Date' {...field} />
                     </FormControl>
                     <FormMessage />
-                    <p className='text-sm font-medium text-destructive'>{birthDateError}</p>
                   </FormItem>
                 )}
               />
@@ -278,9 +259,12 @@ export default function LoginPage() {
             </div>
 
             <div className='my-1 mx-1'>
-              <a href='http://localhost:3001/login' className='text-senary text-xs hover:text-primary hover:shadow-2xl'>
+              <Link
+                href='http://localhost:3001/login'
+                className='text-senary text-xs hover:text-primary hover:shadow-2xl'
+              >
                 already have an account? Log in
-              </a> // TODO use Link
+              </Link>
             </div>
 
             <div className='flex justify-end'>

@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -9,6 +9,8 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { authFetcher } from '@/utilities/fetcher'
+import getData from '@/utilities/getUserData'
 
 const CodeFormSchema = z.object({
   code: z.string().min(6, {
@@ -26,31 +28,29 @@ export default function GetCode({ email }: { email: string }) {
 
   const {
     register,
-    watch,
     formState: { errors }
   } = form
 
   const [error, setError] = useState('')
-  const [success, setSuccess] = useState(false)
-  const codeValue = watch('code')
-  const [code, setCode] = useState('')
+  const [userData, setUserData] = useState({} as any)
   const router = useRouter()
+
+  useEffect(() => {
+    const fetching = async () => {
+      const data = await getData()
+      setUserData(data)
+    }
+
+    fetching()
+  }, [])
+  if (userData.status === 'success') {
+    router.push('/')
+  }
 
   const onSubmit = async (data: z.infer<typeof CodeFormSchema>) => {
     console.log(data)
 
-    const res = await fetch('http://localhost:3000/api/v1/auth/password/verifycode', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
-      body: JSON.stringify({
-        code: data.code,
-        email: email
-      })
-    }).then(res => res.json())
-    console.log(res)
+    const res = await authFetcher({ body: { code: data.code, email: email }, action: 'password/verifycode' })
 
     if (res.status === 'success') {
       router.push('/resetpassword' + `?email=${email}&code=${data.code}`)
@@ -58,27 +58,32 @@ export default function GetCode({ email }: { email: string }) {
       setError(res.error)
     }
   }
-  localStorage && localStorage.getItem('accessToken') && localStorage.getItem('refreshToken') ? router.push('/') : null
 
   return (
     <div>
-      <h1>GetCode</h1>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <FormItem>
-            <FormLabel htmlFor='code'>Code</FormLabel>
-            <Input type='text' id='code' placeholder='Code' {...register('code')} />
-            {errors && <FormMessage>{error}</FormMessage>}
-          </FormItem>
-          <Button className='bg-primary hover:border-senary m-1' type='submit'>
+      <div className='flex justify-center items-center h-screen bg-secondary'>
+        <div className='w-96 flex flex-col border-1 border-quinary bg-white rounded-lg p-4 shadow-lg bg-secondary'>
+          <h2 className='scroll-m-20 text-primary border-b text-center pb-2 text-2xl font-semibold tracking-tight first:mt-0 mb-5'>
+            Enter Code
+          </h2>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <FormItem>
+                <FormLabel htmlFor='code'>Code</FormLabel>
+                <Input type='text' id='code' placeholder='Code' {...register('code')} />
+                {errors && <FormMessage>{error}</FormMessage>}
+              </FormItem>
+              <Button className='bg-primary hover:border-senary m-1' type='submit'>
                 Submit
               </Button>
-          <Button className='bg-secondary hover:bg-senary m-1' type='button' onClick={() => router.push('/')}>
-            {' '}
-            Cancel{' '}
-          </Button>
-        </form>
-      </Form>
+              <Button className='bg-secondary hover:bg-senary m-1' type='button' onClick={() => router.push('/')}>
+                {' '}
+                Cancel{' '}
+              </Button>
+            </form>
+          </Form>
+        </div>
+      </div>
     </div>
   )
 }

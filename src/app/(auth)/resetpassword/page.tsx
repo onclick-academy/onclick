@@ -3,12 +3,15 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { useSearchParams } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { authFetcher } from '@/utilities/fetcher'
+import getData from '@/utilities/getUserData'
 
 const FormSchema = z.object({
   password: z.string().min(6, {
@@ -19,51 +22,51 @@ const FormSchema = z.object({
   })
 })
 
-export default function ResetPassword() {
+export default function ResetPasswordPage() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       password: '',
-      confirmPassword: '',
+      confirmPassword: ''
     }
   })
 
   const {
     register,
-    handleSubmit,
-    watch,
     formState: { errors }
   } = form
 
   const [error, setError] = useState('')
+  const [userData, setUserData] = useState({} as any)
   const router = useRouter()
 
-  // const password = watch('password')
-  // const confirmPassword = watch('confirmPassword')
+  useEffect(() => {
+    const fetching = async () => {
+      const data = await getData()
+      setUserData(data)
+    }
 
-  // if (password !== confirmPassword) {
-  //   setError('Passwords do not match')
-  // }
-  // router.push('/resetpassword' + `?email=${email}&code=${data.code}`)
-  const url = new URL(window.location.href)
-  const email = url.searchParams.get('email')
-  const code = url.searchParams.get('code')
+    fetching()
+  }, [])
+  if (userData.status === 'success') {
+    router.push('/')
+  }
+
+  const params = useSearchParams()
+  const email = params.get('email')
+  const code = params.get('code')
   console.log(email)
   console.log(code)
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     console.log(data)
-    const res = await fetch('http://localhost:3000/api/v1/auth/password/resetpassword', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
-      body: JSON.stringify({
-        email: email,
-        code: code,
-        data})
-    }).then(res => res.json())
+    if (data.password !== data.confirmPassword) {
+      setError('Password does not match')
+      console.log('Password does not match')
+      return
+    }
+    const res = await authFetcher({ body: { email: email, code: code, data }, action: 'password/resetpassword' })
+
     console.log(res)
 
     if (res.status === 'success') {
@@ -72,14 +75,13 @@ export default function ResetPassword() {
       setError(res.message)
     }
   }
-  
-  localStorage && localStorage.getItem('accessToken') && localStorage.getItem('refreshToken') ? router.push('/') : null
   return (
     <div>
-      <h1>ResetPassword</h1>
-
       <div className='flex justify-center items-center h-screen bg-secondary'>
         <div className='w-96 flex flex-col border-1 border-quinary bg-white rounded-lg p-4 shadow-lg bg-secondary'>
+          <h2 className='scroll-m-20 text-primary border-b text-center pb-2 text-3xl font-semibold tracking-tight first:mt-0 mb-5'>
+            Reset Password
+          </h2>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <FormItem>
