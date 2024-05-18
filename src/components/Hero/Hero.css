@@ -1,5 +1,11 @@
-.hero-bg {
-	background-image: url("/public/hero-bg.png");
+:root {
+	--color-c1: #2f57ef;
+	--color-c2: #b966e7;
+}
+
+.bg-hero {
+	background-image: url('hero-bg.png');
+	background-size: cover;
 }
 
 .text-sliding-animation {
@@ -7,7 +13,7 @@
 
 	& li {
 		animation: slide-up 12s infinite;
-		background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+		background: linear-gradient(90deg, var(--color-c1), var(--color-c2));
 		-webkit-text-fill-color: transparent;
 		-webkit-background-clip: text;
 		line-height: 5.5rem;
