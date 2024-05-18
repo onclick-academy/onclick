@@ -8,8 +8,11 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
-import { useState } from 'react'
+import { use, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { authFetcher, fetcher } from '@/utilities/fetcher'
+import Link from 'next/link'
+import getData from '@/utilities/getUserData'
 
 const FormSchema = z.object({
   email: z.string().email({
@@ -31,35 +34,37 @@ export default function LoginPage() {
     }
   })
 
-  const [loginError, setLoginError] = useState('')
-
+  const [userData, setUserData] = useState({} as any)
   const router = useRouter()
+
+  useEffect(() => {
+    const fetching = async () => {
+      const data = await getData()
+      setUserData(data)
+    }
+
+    fetching()
+  }, [])
+  if (userData.status === 'success') {
+    router.push('/')
+  }
+
+  const [loginError, setLoginError] = useState('')
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     console.log(data)
-    const res = await fetch('http://localhost:3000/api/v1/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
-      body: JSON.stringify(data)
-    }).then(res => res.json())
-    console.log(res)
+
+    const res = await authFetcher({ body: data, action: 'login', isRememberMe: data.isRememberMe })
 
     const resJson = res.data
     console.log(resJson)
     if (res.status === 'success') {
       router.push('/')
-      localStorage.setItem('accessToken', res.accessToken)
-      localStorage.setItem('refreshToken', res.refreshToken)
-      localStorage.setItem('userId', resJson.id)
     } else {
       setLoginError('Email or pasword is incorrect')
     }
   }
 
-  localStorage && localStorage.getItem('accessToken') && localStorage.getItem('refreshToken') ? router.push('/') : null
   return (
     <div className='flex justify-center items-center h-screen bg-secondary'>
       <div className='w-96 flex flex-col border-1 border-quinary bg-white rounded-lg p-4 shadow-lg bg-secondary'>
@@ -95,27 +100,31 @@ export default function LoginPage() {
                 </FormItem>
               )}
             />
+            <div className='flex justify-between'>
+              <FormItem className='my-auto ms-0'>
+                <Checkbox
+                  id='isRememberMe'
+                  onClick={() => {
+                    {
+                      form.setValue('isRememberMe', !form.getValues('isRememberMe'))
+                    }
+                  }}
+                />
+                <label
+                  htmlFor='isRememberMe'
+                  className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 px-1'
+                >
+                  Remember Me
+                </label>
+              </FormItem>
 
-            <FormItem className='my-auto ms-0'>
-              <Checkbox
-                id='isRememberMe'
-                onClick={() => {
-                  {
-                    form.setValue('isRememberMe', !form.getValues('isRememberMe'))
-                  }
-                }}
-              />
-              <label
-                htmlFor='isRememberMe'
-                className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 px-1'
+              <Link
+                href='http://localhost:3001/forgetpassword'
+                className='text-senary text-xs hover:text-primary hover:shadow-2xl'
               >
-                Remember Me
-              </label>
-            </FormItem>
-            {/* <a href="http://localhost:3001/auth/forgetpassword">forget your password?</a> */}
-
-            <a href="http://localhost:3001/forgetpassword" className="text-senary text-xs hover:text-primary hover:shadow-2xl">forget your password?</a>
-
+                forget your password?
+              </Link>
+            </div>
 
             <div className='flex justify-end'>
               <Button className='bg-primary hover:border-senary m-1' type='submit'>

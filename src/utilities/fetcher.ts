@@ -1,4 +1,3 @@
-import Cookies from 'universal-cookie'
 
 type FetcherT = {
   url: string
@@ -8,25 +7,27 @@ type FetcherT = {
 
 type AuthFetcherT = {
   body: object
-  action: 'register' | 'login'
+  action: 'register' | 'login' | 'password/forgetpassword' | 'password/resetpassword' | 'password/verifycode'
+  isRememberMe?: boolean
 }
 
-export const authFetcher = async ({ body = {}, action }: AuthFetcherT) => {
+export const authFetcher = async ({ body = {}, action, isRememberMe = false }: AuthFetcherT) => {
+  console.log('object', body)
   const fullUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/${action}`
-  console.log(fullUrl)
+  console.log('url ',fullUrl)
   const res = await fetch(fullUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*'
+      // 'Access-Control-Allow-Origin': '*'
     },
     body: JSON.stringify(body)
   })
   const data = await res.json()
 
-  if (res.ok) {
+  if ( action === 'login' && res.ok) {
     localStorage.setItem('accessToken', data.accessToken)
-    localStorage.setItem('refreshToken', data.refreshToken)
+    if (action === 'login' && isRememberMe) localStorage.setItem('refreshToken', data.refreshToken)
     localStorage.setItem('userId', data.data.id)
   }
 
