@@ -60,9 +60,9 @@ export default function GetCode({ email }: { email: string }) {
   }
 
   return (
-    <div>
-      <div className='flex justify-center items-center h-screen bg-secondary'>
-        <div className='w-96 flex flex-col border-1 border-quinary bg-white rounded-lg p-4 shadow-lg bg-secondary'>
+    <div className='flex justify-center w-full items-center min-h-screen bg-secondary'>
+      <div className='w-full flex items-center justify-center'>
+        <div className='w-9/12 sm:w-6/12 md:w-6/12 lg:w-4/12 xl:w-3/12 flex flex-col border-1 border-quinary bg-white rounded-lg p-4 shadow-lg bg-secondary'>
           <h2 className='scroll-m-20 text-primary border-b text-center pb-2 text-2xl font-semibold tracking-tight first:mt-0 mb-5'>
             Enter Code
           </h2>
