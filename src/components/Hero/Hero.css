@@ -1,36 +1,48 @@
-.hero-bg {
-	background-image: url("/public/hero-bg.png");
+:root {
+  --color-c1: #2f57ef;
+  --color-c2: #b966e7;
+}
+
+.bg-hero {
+  background-image: url('hero-bg.png');
+  background-size: cover;
 }
 
 .text-sliding-animation {
-	overflow: hidden;
+  overflow: hidden;
 
-	& li {
-		animation: slide-up 12s infinite;
-		background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
-		-webkit-text-fill-color: transparent;
-		-webkit-background-clip: text;
-		line-height: 5.5rem;
-	}
+  & li {
+    animation: slide-up 12s infinite;
+    background: linear-gradient(90deg, var(--color-c1), var(--color-c2));
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    line-height: 5.5rem;
+  }
 }
 
 @keyframes slide-up {
-	0%, 10% {
-		transform: translateY(0);
-	}
-	15%, 25% {
-		transform: translateY(-100%);
-	}
-	30%, 40% {
-		transform: translateY(-200%);
-	}
-	45%, 55% {
-		transform: translateY(-300%);
-	}
-	60%, 70% {
-		transform: translateY(-400%);
-	}
-	75%, 85% {
-		transform: translateY(-500%);
-	}
+  0%,
+  10% {
+    transform: translateY(0);
+  }
+  15%,
+  25% {
+    transform: translateY(-100%);
+  }
+  30%,
+  40% {
+    transform: translateY(-200%);
+  }
+  45%,
+  55% {
+    transform: translateY(-300%);
+  }
+  60%,
+  70% {
+    transform: translateY(-400%);
+  }
+  75%,
+  85% {
+    transform: translateY(-500%);
+  }
 }
