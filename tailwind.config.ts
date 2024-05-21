@@ -12,7 +12,12 @@ const config = {
       quaternary: '#A4EBF3',
       quinary: '#A7CBCF',
       senary: '#00A6FB',
-      septenary: '#FFADAD'
+      septenary: '#FFADAD',
+      green:"#00FF00",
+      red:"#FF0000",
+      gray:"#f8f9fa",
+      textgray:"#8e9299",
+      white:"#FFFFFF",
     },
     container: {
       center: true,
