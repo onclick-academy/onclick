@@ -28,10 +28,19 @@ import {
 } from '@/components/ui/command'
 import { NavMenu } from '@/components/Hero/NavMenu'
 import { Button } from '@/components/ui/button'
+import getData from '@/utilities/getUserData'
 
 export default function Header() {
   const [open, setOpen] = useState<boolean>(false)
-  const isAuth = true
+  const [userData, setUserData] = useState({})
+
+  useEffect(() => {
+    const fetching = async () => {
+      const data = await getData()
+      setUserData(data)
+    }
+    fetching()
+  }, [])
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -62,7 +71,12 @@ export default function Header() {
             <Search width={30} />
           </button>
 
-          {isAuth ? (
+          {userData ? (
+            <div className="flex gap-2">
+              <Button><Link href="#">Login</Link></Button>
+              <Button><Link href="#">Signup</Link></Button>
+            </div>
+          ) : (
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Avatar>
@@ -80,11 +94,6 @@ export default function Header() {
                 <DropdownMenuItem>Logout</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          ) : (
-            <div className="flex gap-2">
-              <Button><Link href="#">Login</Link></Button>
-              <Button><Link href="#">Signup</Link></Button>
-            </div>
           )}
         </div>
       </header>

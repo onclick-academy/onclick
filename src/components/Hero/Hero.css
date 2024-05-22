@@ -17,6 +17,10 @@
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
     line-height: 5.5rem;
+
+    @media (max-width: 640px) {
+      line-height: 3.5rem;
+    }
   }
 }
 
