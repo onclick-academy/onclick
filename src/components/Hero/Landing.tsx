@@ -30,15 +30,15 @@ export default function Landing() {
       <div className="container flex flex-col lg:flex-row gap-8 lg:gap-0 items-center py-20">
         <div className="flex-1 order-2 lg:order-1">
           <div className="flex gap-4 lg:gap-16 flex-col lg:flex-row pb-12">
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col items-center md:items-start gap-3">
               <Stars fill={4} half={1} size={24} color="#FF8F3C" />
               <p className="font-semibold ">12500+ TRUST CUSTOMER</p>
             </div>
 
-            <div className="flex flex-col items-center gap-3">
+            <div className="flex flex-col items-center md:items-start gap-3">
               <Badge fill="#FF8F3C"
                      stroke="#FF8F3C"
-                     className="mx-auto lg:mr-0 lg:ml-0" />
+                     className="mx-auto md:mr-0 md:ml-0" />
               <p className="font-semibold">OnClick ELITE AUTHOR</p>
             </div>
           </div>
