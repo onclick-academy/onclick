@@ -102,26 +102,16 @@ function LoginPageComponent() {
                   Remember Me
                 </label>
               </FormItem>
-
               <Link
-                href='/register'
+                href='/forgetpassword'
+                className='text-senary text-xs hover:text-primary hover:shadow-2xl'
                 style={{
-                  marginTop: '5px'
+                  marginTop: 5
                 }}
-                className='mt-2 text-senary text-xs hover:text-primary hover:shadow-2xl'
               >
-                Dont have an account? Register
+                forget your password?
               </Link>
             </div>
-            <Link
-              href='/forgetpassword'
-              className='text-senary text-xs hover:text-primary hover:shadow-2xl'
-              style={{
-                marginTop: 5
-              }}
-            >
-              forget your password?
-            </Link>
 
             <div
               style={{
@@ -140,6 +130,15 @@ function LoginPageComponent() {
                 Login
               </Button>
             </div>
+            <Link
+              href='/register'
+              style={{
+                marginTop: '16px'
+              }}
+              className='mt-2 text-senary text-xs hover:text-primary hover:shadow-2xl'
+            >
+              Dont have an account? Register
+            </Link>
           </form>
         </Form>
       </div>
@@ -151,6 +150,7 @@ export default function LoginPage() {
   return (
     <Suspense fallback={<LoadingSpinner />}>
       <LoginPageComponent />
+      <LoadingSpinner />
     </Suspense>
   )
 }
