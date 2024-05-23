@@ -6,7 +6,7 @@ const getData = async () => {
   })
 
   console.log(userInfo)
-  if (userInfo.data && !userInfo.data.id) throw Error('Error: User not found.')
+  if (!userInfo.data.id) throw Error('Error: User not found.')
   const currentUser = await fetcher({
     url: `/users/${userInfo.data.id}`
   })

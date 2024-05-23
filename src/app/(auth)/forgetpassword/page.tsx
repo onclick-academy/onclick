@@ -108,8 +108,8 @@ export default function ForgetPasswordPage() {
       ) : (
         <div className='w-full flex items-center justify-center'>
           {emailNotifaction ? (
-          <div className='w-9/12 sm:w-6/12 md:w-6/12 lg:w-4/12 xl:w-3/12 flex flex-col border-1 border-quinary bg-white rounded-lg p-4 shadow-lg bg-secondary'>
-          <p className='text-center'>
+            <div className='w-9/12 sm:w-6/12 md:w-6/12 lg:w-4/12 xl:w-3/12 flex flex-col border-1 border-quinary bg-white rounded-lg p-4 shadow-lg bg-secondary'>
+              <p className='text-center'>
                 An email has been sent to {email}. Please check your email for the code till you are redirected.
               </p>
             </div>
