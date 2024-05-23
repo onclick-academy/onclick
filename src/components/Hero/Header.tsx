@@ -65,8 +65,6 @@ export default function Header() {
     setOpen(!open)
   }
 
-  /* TODO: Sheet component for navmenu in small screens */
-
   return (
     <>
       <header className="container py-6 flex justify-between items-center z-10 relative">

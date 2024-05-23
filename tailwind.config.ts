@@ -80,6 +80,12 @@ const config = {
       backgroundPosition: {
         right: '102% 0',
       },
+      backgroundImage: {
+        'gradient-to-r': 'linear-gradient(to right, #2f57ef, #b966e7, #2f57ef, #b966e7)',
+      },
+      backgroundSize: {
+        '300x100': '300% 100%',
+      }
     },
   },
   plugins: [require('tailwindcss-animate')],
