@@ -7,11 +7,16 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'OnClick Academy',
   description: 'OnClick Academy',
-  viewport: 'width=device-width, initial-scale=1',
   icons: {
-    icon: '/favicon.ico'
+    icon: '/favicon.png'
   }
 }
+
+// Move viewport configuration to generate-viewport export
+export const generateViewport = () => ({
+  width: 'device-width',
+  initialScale: 1
+})
 
 export default function RootLayout({
   children

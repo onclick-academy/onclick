@@ -1,4 +1,3 @@
-import { NotificationI } from '@/components/Notification'
 import { fetcher } from '../fetcher'
 
 const getUnreadNotifications = async () => {
@@ -18,7 +17,9 @@ const getReadNotifications = async () => {
     const data = await fetcher({ url: `/notifications/${userId}` })
     const notifications = data.data
 
-    const readedNotifiacation = notifications.filter((notification: NotificationI) => notification.isRead === true)
+    const readedNotifiacation = notifications.filter(
+      (notification: { isRead: boolean }) => notification.isRead === true
+    )
 
     return readedNotifiacation
   } catch (error) {
