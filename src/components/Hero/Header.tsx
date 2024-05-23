@@ -18,7 +18,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
-  Command,
   CommandDialog,
   CommandEmpty,
   CommandGroup,
@@ -27,8 +26,8 @@ import {
   CommandList,
 } from '@/components/ui/command'
 import { NavMenu } from '@/components/Hero/NavMenu'
-import { Button } from '@/components/ui/button'
 import getData from '@/utilities/getUserData'
+import Btn from '@/constants/Btn'
 
 export default function Header() {
   const [open, setOpen] = useState<boolean>(false)
@@ -57,6 +56,8 @@ export default function Header() {
     setOpen(!open)
   }
 
+  /* TODO: Sheet component for navmenu in small screens */
+
   return (
     <>
       <header className="container py-6 flex justify-between items-center z-10 relative">
@@ -72,9 +73,13 @@ export default function Header() {
           </button>
 
           {userData ? (
-            <div className="flex gap-2">
-              <Button><Link href="#">Login</Link></Button>
-              <Button><Link href="#">Signup</Link></Button>
+            <div className="gap-2 hidden md:flex">
+              <Btn className="px-5 py-3">
+                <Link href="#">Login</Link>
+              </Btn>
+              <Btn className="px-5 py-3">
+                <Link href="#">Signup</Link>
+              </Btn>
             </div>
           ) : (
             <DropdownMenu>

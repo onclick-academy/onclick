@@ -18,6 +18,8 @@ export default function Landing() {
       <div className="absolute top-[40%] z-0">
         <Image src={Shape1}
                alt="shape1"
+               width={600}
+               height={600}
                className="z-0" />
       </div>
       <div className="hidden lg:block absolute right-0 z-0">
