@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Search } from 'lucide-react'
+import { IoIosMenu } from 'react-icons/io'
 
 import {
   Avatar,
@@ -25,6 +26,14 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command'
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
 import { NavMenu } from '@/components/Hero/NavMenu'
 import getData from '@/utilities/getUserData'
 import Btn from '@/constants/Btn'
@@ -100,6 +109,23 @@ export default function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           )}
+
+          {/** Navmenu in small screens */}
+          <div className="flex md:hidden">
+            <Sheet>
+              <SheetTrigger>
+                <IoIosMenu size={30} />
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle><Link href="#">My Account</Link></SheetTitle>
+                  <SheetTitle><Link href="#">Cart</Link></SheetTitle>
+                  <SheetTitle><Link href="#">Wishlist</Link></SheetTitle>
+                  <SheetTitle><Link href="#">Logout</Link></SheetTitle>
+                </SheetHeader>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </header>
 
