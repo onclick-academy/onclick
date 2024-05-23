@@ -1,41 +1,146 @@
-import Link from 'next/link'
-import { Search, ShoppingCart } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+'use client'
 
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { Search } from 'lucide-react'
+import { IoIosMenu } from 'react-icons/io'
+
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@/components/ui/avatar'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
 import { NavMenu } from '@/components/Hero/NavMenu'
-import { Button } from '@/components/ui/button'
+import getData from '@/utilities/getUserData'
+import Btn from '@/constants/Btn'
 
 export default function Header() {
-  const isAuth = false
+  const [open, setOpen] = useState<boolean>(false)
+  const [userData, setUserData] = useState({})
+
+  useEffect(() => {
+    const fetching = async () => {
+      const data = await getData()
+      setUserData(data)
+    }
+    fetching()
+  }, [])
+
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        setOpen((open) => !open)
+      }
+    }
+    document.addEventListener('keydown', down)
+    return () => document.removeEventListener('keydown', down)
+  }, [])
+
+  function togleOpen() {
+    setOpen(!open)
+  }
 
   return (
-    <header className='py-6 flex justify-between items-center z-20'>
-      <Link href='/'>Logo</Link>
+    <>
+      <header className="container py-6 flex justify-between items-center z-10 relative">
+        <Link href="#">OnClick</Link>
 
-      <NavMenu />
-
-      <div className='flex items-center gap-3'>
-        {/* TODO: onsearch dispaly a modal for search & results, reference: frontendMasters */}
-        <button>
-          <Search width={25} />
-        </button>
-
-        <Link href='/'>
-          <ShoppingCart width={25} />
-        </Link>
-
-        <Avatar>
-          <AvatarImage src='https://github.com/shadcn.png' />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
-      </div>
-
-      {isAuth && (
-        <div className='flex gap-2'>
-          <Button>Signin</Button>
-          <Button>Signup</Button>
+        <div className="hidden md:block">
+          <NavMenu />
         </div>
-      )}
-    </header>
+
+        <div className="flex items-center gap-5">
+          <button onClick={togleOpen}>
+            <Search width={30} />
+          </button>
+
+          {userData ? (
+            <div className="gap-2 hidden md:flex">
+              <Btn className="px-5 py-3">
+                <Link href="#">Login</Link>
+              </Btn>
+              <Btn className="px-5 py-3">
+                <Link href="#">Signup</Link>
+              </Btn>
+            </div>
+          ) : (
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Avatar>
+                  <AvatarImage src="https://github.com/shadcn.png"
+                               className="z-10" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <DropdownMenuItem>Cart</DropdownMenuItem>
+                <DropdownMenuItem>Wishlist</DropdownMenuItem>
+                <DropdownMenuItem>Logout</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+
+          {/** Navmenu in small screens */}
+          <div className="flex md:hidden">
+            <Sheet>
+              <SheetTrigger>
+                <IoIosMenu size={30} />
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle><Link href="#">My Account</Link></SheetTitle>
+                  <SheetTitle><Link href="#">Cart</Link></SheetTitle>
+                  <SheetTitle><Link href="#">Wishlist</Link></SheetTitle>
+                  <SheetTitle><Link href="#">Logout</Link></SheetTitle>
+                </SheetHeader>
+              </SheetContent>
+            </Sheet>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-xl h-fit absolute left-1/2 transform -translate-x-1/2 z-10">
+        <CommandDialog open={open}
+                       onOpenChange={setOpen}>
+          <CommandInput placeholder="Type a command or search..." />
+          <CommandList>
+            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandGroup heading="Suggestions">
+              <CommandItem>Calendar</CommandItem>
+              <CommandItem>Search Emoji</CommandItem>
+              <CommandItem>Calculator</CommandItem>
+            </CommandGroup>
+          </CommandList>
+        </CommandDialog>
+      </div>
+    </>
   )
 }
