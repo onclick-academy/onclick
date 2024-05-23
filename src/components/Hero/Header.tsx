@@ -9,13 +9,12 @@ export default function Header() {
   const isAuth = false
 
   return (
-    <header className='py-6 flex justify-between items-center z-20'>
+    <header className='pb-6 flex justify-between items-center z-20'>
       <Link href='/'>Logo</Link>
 
       <NavMenu />
 
       <div className='flex items-center gap-3'>
-        {/* TODO: onsearch dispaly a modal for search & results, reference: frontendMasters */}
         <button>
           <Search width={25} />
         </button>
