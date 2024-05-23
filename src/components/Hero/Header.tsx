@@ -37,6 +37,11 @@ import {
 import { NavMenu } from '@/components/Hero/NavMenu'
 import getData from '@/utilities/getUserData'
 import Btn from '@/constants/Btn'
+import {
+  NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink,
+  NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle,
+} from '@/components/ui/navigation-menu'
+import * as React from 'react'
 
 export default function Header() {
   const [open, setOpen] = useState<boolean>(false)
@@ -65,15 +70,36 @@ export default function Header() {
     setOpen(!open)
   }
 
-  /* TODO: Sheet component for navmenu in small screens */
-
   return (
     <>
       <header className="container py-6 flex justify-between items-center z-10 relative">
-        <Link href="#">OnClick</Link>
+        <div className="flex items-center gap-4">
+          <Link href="#">OnClick</Link>
+
+          <div className="hidden md:block">
+            <NavMenu />
+          </div>
+        </div>
 
         <div className="hidden md:block">
-          <NavMenu />
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <Link href="/" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    News
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link href="/" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    Events
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
         </div>
 
         <div className="flex items-center gap-5">
