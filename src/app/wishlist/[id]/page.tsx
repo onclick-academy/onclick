@@ -19,6 +19,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import Btn from '@/constants/Btn'
+import { useSearchParams } from 'next/navigation'
 
 const courses = [
   {
@@ -44,13 +45,16 @@ export default function Wishlist() {
     setUserCourses(userCourses.filter(course => course.id !== courseId))
   }
 
+  const params = useSearchParams()
+  const id = params.get('id')
+
   return (
     <>
       <Header />
 
       <div className="container w-full pt-8 pb-24 flex gap-4 flex-col items-center justify-center">
         <h1 className="text-4xl font-bold">
-          Wishlist
+          Wishlist for {id}
         </h1>
 
         <Breadcrumb>
