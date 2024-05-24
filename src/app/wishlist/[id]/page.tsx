@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { IoClose } from 'react-icons/io5'
-import Header from '@/components/Hero/Header'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -19,7 +18,6 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import Btn from '@/constants/Btn'
-import { useSearchParams } from 'next/navigation'
 
 const courses = [
   {
@@ -38,21 +36,18 @@ const courses = [
   },
 ]
 
-export default function Wishlist() {
+export default function Wishlist({ params }: { params: { id: string } }) {
   const [userCourses, setUserCourses] = useState(courses)
 
   const removeCourse = (courseId: string) => {
     setUserCourses(userCourses.filter(course => course.id !== courseId))
   }
 
-  const params = useSearchParams()
-  const id = params.get('id')
+  const id = params.id
 
   return (
-    <>
-      <Header />
-
-      <div className="container w-full pt-8 pb-24 flex gap-4 flex-col items-center justify-center">
+    <div className="w-screen">
+      <div className="mx-auto container w-full pt-8 pb-24 flex gap-4 flex-col items-center justify-center">
         <h1 className="text-4xl font-bold">
           Wishlist for {id}
         </h1>
@@ -70,7 +65,7 @@ export default function Wishlist() {
         </Breadcrumb>
       </div>
 
-      <div className="sm:container flex max-sm:px-1 flex-col items-center justify-center">
+      <div className="mx-auto sm:container flex max-sm:px-1 flex-col items-center justify-center">
         <Table>
           <TableHeader className="rounded-lg overflow-hidden">
             <TableRow className="bg-gradient-to-r background-size[300x100] text-white">
@@ -101,6 +96,6 @@ export default function Wishlist() {
           </TableBody>
         </Table>
       </div>
-    </>
+    </div>
   )
 }
