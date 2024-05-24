@@ -11,7 +11,7 @@ export default function Landing() {
   /* TODO: Add floating elements*/
 
   return (
-    <>
+    <div className="w-screen">
       <div className="absolute left-1/2 transform z-0 -translate-x-1/2 top-0">
         <Image src={Shape3} width={500} height={500} alt="shape1" />
       </div>
@@ -27,7 +27,7 @@ export default function Landing() {
                alt="shape2"
                className="z-0" />
       </div>
-      <div className="container flex flex-col lg:flex-row gap-8 lg:gap-0 items-center py-20">
+      <div className="mx-auto container flex flex-col lg:flex-row gap-8 lg:gap-0 items-center py-20">
         <div className="flex-1 order-2 lg:order-1">
           <div className="flex gap-4 lg:gap-16 flex-col lg:flex-row pb-12">
             <div className="flex flex-col items-center gap-3">
@@ -53,7 +53,7 @@ export default function Landing() {
                  alt="Hero banner section" />
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

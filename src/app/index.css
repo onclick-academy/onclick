@@ -4,7 +4,7 @@
 }
 
 .bg-hero {
-  background-image: url('hero-bg.png');
+  background-image: url('../components/Hero/hero-bg.png');
   background-size: cover;
 }
 

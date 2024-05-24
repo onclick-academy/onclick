@@ -67,62 +67,64 @@ export default function Header() {
 
   return (
     <>
-      <header className="container py-6 flex justify-between items-center z-10 relative">
-        <Link href="#">OnClick</Link>
+      <header className="w-screen px-2 py-6">
+        <div className="mx-auto container flex justify-between items-center z-10 relative">
+          <Link href="#">OnClick</Link>
 
-        <div className="hidden md:block">
-          <NavMenu />
-        </div>
+          <div className="hidden md:block">
+            <NavMenu />
+          </div>
 
-        <div className="flex items-center gap-5">
-          <button onClick={togleOpen}>
-            <Search width={30} />
-          </button>
+          <div className="flex items-center gap-5">
+            <button onClick={togleOpen}>
+              <Search width={30} />
+            </button>
 
-          {userData ? (
-            <div className="gap-2 hidden md:flex">
-              <Btn className="px-5 py-3">
-                <Link href="#">Login</Link>
-              </Btn>
-              <Btn className="px-5 py-3">
-                <Link href="#">Signup</Link>
-              </Btn>
+            {userData ? (
+              <div className="gap-2 hidden md:flex">
+                <Btn className="px-5 py-3">
+                  <Link href="#">Login</Link>
+                </Btn>
+                <Btn className="px-5 py-3">
+                  <Link href="#">Signup</Link>
+                </Btn>
+              </div>
+            ) : (
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <Avatar>
+                    <AvatarImage src="https://github.com/shadcn.png"
+                                 className="z-10" />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Profile</DropdownMenuItem>
+                  <DropdownMenuItem>Cart</DropdownMenuItem>
+                  <DropdownMenuItem>Wishlist</DropdownMenuItem>
+                  <DropdownMenuItem>Logout</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
+            {/** Navmenu in small screens */}
+            <div className="flex md:hidden">
+              <Sheet>
+                <SheetTrigger>
+                  <IoIosMenu size={30} />
+                </SheetTrigger>
+                <SheetContent>
+                  <SheetHeader>
+                    <SheetTitle><Link href="#">My Account</Link></SheetTitle>
+                    <SheetTitle><Link href="#">Cart</Link></SheetTitle>
+                    <SheetTitle><Link href="#">Wishlist</Link></SheetTitle>
+                    <SheetTitle><Link href="#">Logout</Link></SheetTitle>
+                  </SheetHeader>
+                </SheetContent>
+              </Sheet>
             </div>
-          ) : (
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png"
-                               className="z-10" />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Cart</DropdownMenuItem>
-                <DropdownMenuItem>Wishlist</DropdownMenuItem>
-                <DropdownMenuItem>Logout</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-
-          {/** Navmenu in small screens */}
-          <div className="flex md:hidden">
-            <Sheet>
-              <SheetTrigger>
-                <IoIosMenu size={30} />
-              </SheetTrigger>
-              <SheetContent>
-                <SheetHeader>
-                  <SheetTitle><Link href="#">My Account</Link></SheetTitle>
-                  <SheetTitle><Link href="#">Cart</Link></SheetTitle>
-                  <SheetTitle><Link href="#">Wishlist</Link></SheetTitle>
-                  <SheetTitle><Link href="#">Logout</Link></SheetTitle>
-                </SheetHeader>
-              </SheetContent>
-            </Sheet>
           </div>
         </div>
       </header>
