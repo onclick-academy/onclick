@@ -8,7 +8,7 @@ import Shape2 from './shape-2.png'
 import Shape3 from './shape-3.png'
 // import Header from '@/components/Hero/Header'
 import Landing from '@/components/Hero/Landing'
-import './Hero.css'
+// import './Hero.css'
 
 export default function Hero() {
   /* TODO: Add floating elements*/
