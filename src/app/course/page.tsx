@@ -1,12 +1,15 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { fetcher } from '@/utilities/fetcher'
 import { Badge } from '@/components/ui/badge'
 import { FaCrown } from 'react-icons/fa'
 import Stars from '@/constants/Stars'
-import { set } from 'date-fns'
 import { Button } from '@/components/ui/button'
+import StarsRating from '@/constants/Star'
+import { IoPeople } from 'react-icons/io5'
+import { MdPlayCircleOutline } from 'react-icons/md'
+import { FaStar } from 'react-icons/fa'
 
 function convertDate(dateStr: string): string {
   const dateObj = new Date(dateStr)
@@ -43,9 +46,10 @@ interface CourseI {
     title: string
   }
   enrollments: []
-  ratings: []
+  ratings: [{ userId: string; rate: number; comment: string }]
   discount: number
   certificate: ''
+  sections: SectionI[]
 }
 interface UserI {
   id: string
@@ -53,6 +57,7 @@ interface UserI {
   lastName: string
   username: string
   profilePic: string | null
+  bio: string
 }
 
 interface CategoryI {
@@ -180,8 +185,12 @@ function HeaderSection({
               {rating} <Stars fill={rating} half={rating % 1} size={24} color='' />
             </span>
           )}
-          <span><span className='font-black'>{studentRated}</span> Rating</span>
-          <span><span className='font-black'>{studentEnrolled} </span> Enrolled </span>
+          <span>
+            <span className='font-black'>{studentRated}</span> Rating
+          </span>
+          <span>
+            <span className='font-black'>{studentEnrolled} </span> Enrolled{' '}
+          </span>
         </div>
         <h1 className='sm:w-9/12 w-11/12 text-center text-3xl font-black p-4'>{courseData.title}</h1>
         <div className='w-7/12 flex flex-col sm:flex-row gap-2 items-center justify-center'>
@@ -258,7 +267,7 @@ function CourseDataSection({
   sections: SectionI[]
 }) {
   return (
-    <div className='w-8/12 relative flex flex-col gap-2 lg:flex-row items-center justify-between mt-48'>
+    <div className='w-full sm:w-8/12 relative flex flex-col gap-2 lg:flex-row items-center justify-between mt-48'>
       <CourseDataAside
         courseData={courseData}
         rating={rating}
@@ -386,7 +395,7 @@ function CourseDataAside({
   }
 
   return (
-    <div className='lg:w-4/12 w-full justify-start flex flex-col rounded-md items-center h-screen p-3'>
+    <div className='lg:w-4/12 w-full justify-start flex flex-col rounded-md items-center h-full lg:h-screen p-3'>
       <div className='w-full p-3 flex  justify-between'>
         {courseData.discount ? (
           <div className='flex gap-3 items-center'>
@@ -510,55 +519,260 @@ function CourseDataMain({
       <CourseDataInstructor />
       <CourseDataReviews />
       */}
-      <Tabs defaultValue='overview' className='h-screen'>
+      <Tabs defaultValue='reviews' className='h-screen'>
         <TabsList className='grid w-full grid-cols-5'>
           <TabsTrigger value='overview'>Overview</TabsTrigger>
+          <TabsTrigger value='content'>Content</TabsTrigger>
           <TabsTrigger value='instructor'>Instructor</TabsTrigger>
           <TabsTrigger value='reviews'>Reviews</TabsTrigger>
         </TabsList>
         <TabsContent value='overview'>
-          <CourseDataOverView courseData={courseData}/>
+          <CourseDataOverView courseData={courseData} />
+        </TabsContent>
+        <TabsContent value='content'>
+          <CourseDataContent courseData={courseData} sections={sections} />
         </TabsContent>
         <TabsContent value='instructor'>
-          <CourseDataInstructor />
+          <CourseDataInstructor courseData={courseData} instructorData={instructorData} />
         </TabsContent>
         <TabsContent value='reviews'>
-          <CourseDataReviews />
+          <CourseDataReviews courseData={courseData} rating={rating} />
         </TabsContent>
       </Tabs>
     </div>
   )
 }
 
-function CourseDataOverView({
-  courseData
-}: {
-  courseData: CourseI
-}) {
+function CourseDataOverView({ courseData }: { courseData: CourseI }) {
   return (
     <div className='p-3 flex flex-col gap-3 h-full'>
-      <img src={courseData.photo} className='w-3/5 mx-auto' alt="" />
+      <img src={courseData.photo} className='w-3/5 mx-auto' alt='' />
       <h1 className='sm:text-3xl text-xl font-bold text-primary'>About Course</h1>
-      <span className='text-gray-400 p-4'>
-        {courseData.description}
-      </span>
+      <span className='text-gray-400 p-4'>{courseData.description}</span>
     </div>
   )
 }
 
-function CourseDataInstructor() {
+function CourseDataContent({
+  courseData,
+  sections
+}: {
+  courseData: CourseI
+  sections: SectionI[]
+}) {
+  // TODO : Fix Copilot Issues
   return (
-    <div>
-      <h1>Course Data Instructor</h1>
+    <div className='p-3 flex flex-col gap-3 h-full'>
+      <h1 className='sm:text-3xl text-xl font-bold text-primary'>Course Content</h1>
+      <div className='flex flex-col gap-3 w-full'>
+        {sections.map((section, index) => (
+          <div key={index} className='flex flex-col gap-3 w-full'>
+            <h2 className='text-xl font-bold'>{section.content}</h2>
+            <div className='flex flex-col gap-3 w-full'>
+              {section.lectures.map((lecture, index) => (
+                <div key={index} className='flex flex-col gap-3 w-full'>
+                  <h3 className='text-lg font-bold'>{lecture.title}</h3>
+                  <span className='text-gray-400'>{lecture.description}</span>
+                  <video controls className='w-full'>
+                    <source src={lecture.videoUrl} type='video/mp4' />
+                  </video>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
 
-function CourseDataReviews() {
+function CourseDataInstructor({ courseData, instructorData }: { courseData: CourseI; instructorData: UserI }) {
+  const [instructorRate, setInstructorRate] = useState(0)
+  const [reviewers, setReviewers] = useState(0)
+  const [instructorCourses, setInstructorCourses] = useState(0)
+  const [instructorStudents, setInstructorStudents] = useState(0)
+
+  useEffect(() => {
+    const getInstructorRate = async () => {
+      const url = `/ratings/instructor/rate/${instructorData.id}`
+      const response = await fetcher({ url })
+      const ratings = response.data
+      if (!ratings.length) setInstructorRate(0)
+      const sum = ratings.length && ratings.reduce((acc: number, curr: any) => acc + curr.rating, 0)
+      const avg = sum / ratings.length
+      setInstructorRate(avg ? avg : 0)
+      setReviewers(ratings.length ? ratings.length : 0)
+    }
+
+    const getInstructorCourses = async () => {
+      const url = `/courses/instructor/${instructorData.id}`
+      const response = await fetcher({ url })
+      setInstructorCourses(response.data.length ? response.data.length : 0)
+    }
+
+    const getInstructorStudents = async () => {
+      const url = `/courseEnrolls/instructor/${instructorData.id}`
+      const response = await fetcher({ url })
+      setInstructorStudents(response.data.length ? response.data.length : 0)
+    }
+
+    getInstructorRate()
+    getInstructorCourses()
+    getInstructorStudents()
+  }, [courseData, instructorData])
+
+  console.log(instructorData)
+
   return (
-    <div>
-      <h1>Course Data Reviews</h1>
+    <div className='p-3 flex flex-col gap-3 h-full w-full'>
+      <div className='w-full flex items-center justify-center rounded-full'>
+        <img src={instructorData.profilePic} alt='Instructor Image' className='w-36 sm:w-44 rounded-full ' />
+      </div>
+
+      <div className='flex flex-col w-full items-center gap-4 p-2'>
+        <h2 className='text-xl font-bold'>
+          {instructorData.firstName} {instructorData.lastName}
+        </h2>
+
+        <div className='flex w-full flex-col gap-2'>
+          <div className='w-full flex justify-evenly '>
+            <span className='flex gap-2 text-gray-400'>
+              <span className='flex items-center gap-1'>
+                <FaStar className='text-orange-500' /> {reviewers}
+              </span>{' '}
+              {reviewers > 1 ? 'Reviews' : 'Review'}
+            </span>
+            <span className='flex gap-1 bg-gray-100 px-2 rounded-xl items-center text-sm text-slate-500'>
+              {' '}
+              <span>{instructorRate}</span>
+              <span className='flex items-center'>Rating</span>
+            </span>{' '}
+          </div>
+
+          <div className='w-full flex justify-evenly'>
+            <span className='flex gap-2  text-gray-400'>
+              <span className='flex items-center gap-1'>
+                <IoPeople /> {instructorStudents}
+              </span>{' '}
+              {instructorStudents > 1 ? 'Students' : 'Student'}
+            </span>
+
+            <span className='flex gap-2  text-gray-400'>
+              <span className='flex items-center gap-1'>
+                <MdPlayCircleOutline /> {instructorCourses}
+              </span>{' '}
+              {instructorCourses > 1 ? 'Courses' : 'Course'}
+            </span>
+          </div>
+        </div>
+
+        <div className='my-2 flex flex-col gap-3'>
+          <h1 className='text-xl font-bold text-primary'>About Instructor:</h1>
+          <p className='flex gap-1 bg-gray-100 px-2 rounded-xl items-center text-base text-slate-500'>
+            {instructorData.bio} {instructorData.bio}
+          </p>
+        </div>
+      </div>
     </div>
   )
 }
 
+function CourseDataReviews({ courseData, rating }: { courseData: CourseI; rating: number }) {
+
+  let Star1 = 0
+  let Star2 = 0
+  let Star3 = 0
+  let Star4 = 0
+  let Star5 = 0
+  let reviewsForFiveStars: { userId: string; rate: number; comment: string }[] = []
+
+  if (courseData.ratings) {
+   Star1 = courseData && courseData.ratings.filter(rating => rating.rate > 0 && rating.rate < 1.5).length
+   Star2 = courseData && courseData.ratings.filter(rating => rating.rate >= 1.5 && rating.rate < 2.5).length
+   Star3 = courseData && courseData.ratings.filter(rating => rating.rate >= 2.5 && rating.rate < 3.5).length
+   Star4 = courseData && courseData.ratings.filter(rating => rating.rate >= 3.5 && rating.rate < 4.5).length
+   Star5 = courseData && courseData.ratings.filter(rating => rating.rate >= 4.5 && rating.rate <= 5).length
+
+   reviewsForFiveStars = courseData && courseData.ratings.filter(rating => rating.rate === 5)
+  }
+  console.log(" reviewsForFiveStars ", reviewsForFiveStars)
+  return (
+    <div className='p-3 flex flex-col gap-3 h-full w-full'>
+      <div className='flex w-full gap-2 flex-col items-center justify-center p-8 bg-gray-300'>
+        <span className='text-gray-400'>{rating.toFixed(1)}</span>
+        <StarsRating rating={rating} size={22} readOnly />
+        <p>Course Rating</p>
+      </div>
+
+      <div className='flex gap-3 p-3 w-full flex-col items-center justify-center my-2'>
+        <div className='flex gap-2 w-full items-center justify-evenly'>
+          <StarsRating rating={1} size={40} readOnly />
+          <span className='text-gray-400'>
+            {Star1} {Star1 > 1 ? 'Students' : 'Student'}
+          </span>
+        </div>
+        <div className='flex gap-2  w-full items-center justify-evenly'>
+          <StarsRating rating={2} size={40} readOnly />
+          <span className='text-gray-400'>
+            {Star2} {Star2 > 1 ? 'Students' : 'Student'}
+          </span>
+        </div>
+        <div className='flex gap-2  w-full items-center justify-evenly'>
+          <StarsRating rating={3} size={40} readOnly />
+          <span className='text-gray-400'>
+            {Star3} {Star3 > 1 ? 'Students' : 'Student'}{' '}
+          </span>
+        </div>
+        <div className='flex gap-2  w-full items-center justify-evenly'>
+          <StarsRating rating={4} size={40} readOnly />
+          <span className='text-gray-400'>
+            {Star4} {Star4 > 1 ? 'Students' : 'Student'}
+          </span>
+        </div>
+        <div className='flex gap-2  w-full items-center justify-evenly'>
+          <StarsRating rating={5} size={40} readOnly />
+          <span className='text-gray-400'>
+            {Star5} {Star5 > 1 ? 'Students' : 'Student'}
+          </span>
+        </div>
+      </div>
+
+      <div className='flex flex-col gap-3 w-full'>
+        <h1 className='text-xl font-bold text-primary border-b border-blue-100'>Reviews</h1>
+        <div className='flex flex-col gap-3 w-full'>
+          {reviewsForFiveStars.map((review, index) => (
+            <ReviewComponent key={index} review={courseData.ratings[0]} />
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function ReviewComponent({ review }: { review: { userId: string; rate: number; comment: string } }) {
+  const [user, setUser] = useState({} as UserI)
+
+  useEffect(() => {
+    const getUser = async () => {
+      const url = `/users/${review.userId}`
+      const response = await fetcher({ url })
+      setUser(response.data)
+    }
+
+    getUser()
+  }, [review.userId])
+
+  return (
+    <div className='flex gap-3 p-3'>
+      <div className='sm:w-5/12 flex justify-center items-center'>
+        <img src={user.profilePic} alt='User Profile' className='p-2' />
+      </div>
+
+      <div className='flex gap-3 p-5 flex-col'>
+        <h1 className='text-lg font-bold'>{user.firstName} {user.lastName}</h1>
+        <StarsRating rating={review.rate} size={16} readOnly />
+        <p className='text-sm text-gray-500'>{review.comment}</p>
+      </div>
+    </div>
+  )
+}

@@ -4,15 +4,24 @@ type StarProps = {
   size: number
   color: string
   filled: boolean
+  halfFilled: boolean
   readOnly: boolean
   onMouseEnter: () => void
   onMouseLeave: () => void
   onClick: () => void
 }
 
-const Star: React.FC<StarProps> = ({ size, color, filled, readOnly, onMouseEnter, onMouseLeave, onClick }) => (
+const Star: React.FC<StarProps> = ({
+  size,
+  color,
+  filled,
+  halfFilled,
+  readOnly,
+  onMouseEnter,
+  onMouseLeave,
+  onClick
+}) => (
   <svg
-    className=''
     aria-hidden='true'
     role='button'
     xmlns='http://www.w3.org/2000/svg'
@@ -24,9 +33,18 @@ const Star: React.FC<StarProps> = ({ size, color, filled, readOnly, onMouseEnter
     onMouseEnter={readOnly ? undefined : onMouseEnter}
     onMouseLeave={readOnly ? undefined : onMouseLeave}
     onClick={readOnly ? undefined : onClick}
-    style={{ cursor: readOnly ? 'default' : 'pointer' }}
+    style={{ cursor: readOnly ? 'default' : 'pointer', position: 'relative' }}
   >
-    <path d='M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z' />
+    <defs>
+      <linearGradient id='half'>
+        <stop offset='50%' stopColor={color} />
+        <stop offset='50%' stopColor='transparent' />
+      </linearGradient>
+    </defs>
+    <path
+      fill={halfFilled ? 'url(#half)' : filled ? color : 'none'}
+      d='M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z'
+    />
   </svg>
 )
 
@@ -57,19 +75,28 @@ const StarsRating: React.FC<StarRatingProps> = ({
   }
 
   return (
-    <div>
-      {Array.from({ length: 5 }, (_, i) => (
-        <Star
-          key={i}
-          size={size}
-          color={color}
-          filled={i < (hoverRating || rating)}
-          readOnly={readOnly}
-          onMouseEnter={() => setHoverRating(i + 1)}
-          onMouseLeave={() => setHoverRating(0)}
-          onClick={() => handleRate(i + 1)}
-        />
-      ))}
+    <div
+      style={{
+        display: 'flex'
+      }}
+    >
+      {Array.from({ length: 5 }, (_, i) => {
+        const filled = i < Math.floor(hoverRating || rating)
+        const halfFilled = i === Math.floor(hoverRating || rating) && (hoverRating || rating) % 1 !== 0
+        return (
+          <Star
+            key={i}
+            size={size}
+            color={color}
+            filled={filled}
+            halfFilled={halfFilled}
+            readOnly={readOnly}
+            onMouseEnter={() => setHoverRating(i + 1)}
+            onMouseLeave={() => setHoverRating(0)}
+            onClick={() => handleRate(i + 1)}
+          />
+        )
+      })}
     </div>
   )
 }

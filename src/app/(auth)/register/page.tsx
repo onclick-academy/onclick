@@ -65,7 +65,7 @@ export default function RegisterPage() {
     console.log(resJson)
     if (res.status === 'success') {
       console.log(resJson)
-      // router.push('/login')
+      router.push('/login')
     } else {
       console.log(res)
       if (res.error === 'Email is already in use') setError('email', { message: res.error })
