@@ -1,42 +1,46 @@
 import type { Config } from 'tailwindcss'
+import defaultTheme from 'tailwindcss/defaultTheme'
 
 const config = {
-  darkMode: ['class'],
+  darkMode: 'class', // Ensure dark mode is set to 'class'
   content: ['./pages/**/*.{ts,tsx}', './components/**/*.{ts,tsx}', './app/**/*.{ts,tsx}', './src/**/*.{ts,tsx}'],
-  prefix: '',
   theme: {
-    colors: {
-      primary: '#4682A9',
-      secondary: '#F5FAFA',
-      tertiary: '#CCF2F4',
-      quaternary: '#A4EBF3',
-      quinary: '#A7CBCF',
-      senary: '#00A6FB',
-      septenary: '#FFADAD',
-      green:"#00FF00",
-      red:"#FF0000",
-      gray:"#f8f9fa",
-      textgray:"#8e9299",
-      white:"#FFFFFF",
-    },
-    container: {
-      center: true,
-      padding: '2rem',
-      screens: {
-        '2xl': '1400px'
-      }
-    },
     extend: {
       colors: {
+        primary: {
+          DEFAULT: '#4682A9',
+          800: '#588db1',
+          900: '#1C2331'
+        },
+        secondary: '#F5FAFA',
+        tertiary: '#CCF2F4',
+        quaternary: '#A4EBF3',
+        quinary: '#A7CBCF',
+        senary: '#00A6FB',
+        septenary: '#FFADAD',
+        customWhite: '#FFFFFF',
+        customRed: '#FF0000',
+        ...defaultTheme.colors,
+        gray: {
+          600: '#4A5568'
+        },
+        blue: {
+          600: '#2563EB'
+        },
+        white: {
+          DEFAULT: '#FFFFFF',
+          100: '#F7F7F7',
+          200: '#E5E5E5',
+          300: '#D4D4D4',
+          400: '#C2C2C2',
+          500: '#B0B0B0',
+          600: '#9E9E9E'
+        },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
-        secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))'
-        },
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))'
