@@ -89,7 +89,6 @@ export default function Header() {
       <header className='container bg-transparent py-6 flex justify-between items-center z-10 relative'>
         <div className='flex items-center gap-4'>
           <Link href='#'>OnClick</Link>
-
           <div className='hidden md:block'>
             <NavMenu />
           </div>
