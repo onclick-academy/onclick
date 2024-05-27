@@ -1,5 +1,4 @@
 'use client'
-
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -8,10 +7,11 @@ import { useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Form, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { authFetcher } from '@/utilities/fetcher'
 import getData from '@/utilities/getUserData'
+import LoadingSpinner from '@/app/loading'
 
 const FormSchema = z.object({
   password: z.string().min(6, {
@@ -22,7 +22,7 @@ const FormSchema = z.object({
   })
 })
 
-export default function ResetPasswordPage() {
+function ResetPasswordPageComponent() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -111,5 +111,13 @@ export default function ResetPasswordPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <ResetPasswordPageComponent />
+    </Suspense>
   )
 }

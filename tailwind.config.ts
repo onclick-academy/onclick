@@ -7,11 +7,7 @@ const config = {
   theme: {
     extend: {
       colors: {
-        primary: {
-          DEFAULT: '#4682A9',
-          800: '#588db1',
-          900: '#1C2331'
-        },
+        primary: '#4682A9',
         secondary: '#F5FAFA',
         tertiary: '#CCF2F4',
         quaternary: '#A4EBF3',
@@ -26,15 +22,6 @@ const config = {
         },
         blue: {
           600: '#2563EB'
-        },
-        white: {
-          DEFAULT: '#FFFFFF',
-          100: '#F7F7F7',
-          200: '#E5E5E5',
-          300: '#D4D4D4',
-          400: '#C2C2C2',
-          500: '#B0B0B0',
-          600: '#9E9E9E'
         },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',

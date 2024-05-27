@@ -18,7 +18,6 @@ export const authFetcher = async ({ body = {}, action, isRememberMe = false }: A
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
-      // 'Access-Control-Allow-Origin': '*'
     },
     body: JSON.stringify(body)
   })

@@ -2,7 +2,7 @@ import Hero from '@/components/Hero/Hero'
 
 export default function Home() {
   return (
-    <main className='min-h-screen'>
+    <main className='h-fit'>
       <Hero />
     </main>
   )
