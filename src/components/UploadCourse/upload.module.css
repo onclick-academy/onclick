@@ -1,0 +1,10 @@
+.thumb {
+        left: 40%;
+      }
+      
+      @media (max-width: 400px) {
+        .thumb {
+          left: 30%;
+        }
+      }
+      
