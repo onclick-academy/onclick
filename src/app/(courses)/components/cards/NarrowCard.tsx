@@ -13,10 +13,11 @@ interface NarrowCardProps {
 }
 
 const NarrowCard = ({ course }: NarrowCardProps) => {
-  console.log('🚀 ~ file: NarrowCard.tsx ~ line 10 ~ NarrowCard ~ data', course)
+  console.log('🚀 ~ NarrowCard ~ course:', course)
+
   return (
-    <div className='w-xl max-w-l mx-auto bg-white-100 rounded-lg shadow-md overflow-hidden'>
-      <div className='relative w-full h-48'>
+    <div className='card'>
+      <div className='image-container relative w-full'>
         <CustomImage
           src={course.photo} // Replace this with your dynamic photo source from database
           alt='Course cover'
@@ -24,16 +25,19 @@ const NarrowCard = ({ course }: NarrowCardProps) => {
           objectFit='cover'
           className='rounded-t-lg'
           placeholderSrc='/images/course-placeholder-cover.jpg'
+          style={{}}
         />
       </div>
-      <div className='p-4'>
+      <div className='course-info p-4'>
         <div className='flex items-center'>
           <div className='text-yellow-500'>
             <StarsRating rating={4.2} size={15} readOnly />
           </div>
           <span className='text-gray-600 text-xs ml-2'>{course.reviewsNumber}</span>
         </div>
-        <h2 className='text-xl font-bold mt-2'>{course.title}</h2>
+        <h2 className='course-title text-xl font-bold mt-2'>
+          {course.title.length > 50 ? course.title.slice(0, 50) + '...' : course.title}
+        </h2>
         <div className='flex items-center mt-2 text-gray-600'>
           <div className='flex items-center mr-4'>
             <MdOutlinePlayLesson />
@@ -44,8 +48,20 @@ const NarrowCard = ({ course }: NarrowCardProps) => {
             {course.studentsNumber}
           </div>
         </div>
-        <p className='text-gray-600 mt-2'>It is a long established fact that a reader will be distracted.</p>
-        <div className='flex items-center mt-4'>
+        {course.description.length > 150 ? (
+          <div
+            className='flex'
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between'
+            }}
+          >
+            <p className='course-description text-gray-600 mt-4'>{course.description.slice(0, 150)}...</p>
+          </div>
+        ) : (
+          <p className='text-gray-600 mt-4'>{course.description}</p>
+        )}
+        <div className='flex items-center mt-6'>
           <Image
             className='w-10 h-10 rounded-full'
             src='https://rainbowit.net/html/histudy/assets/images/client/avatar-03.png'
@@ -54,16 +70,20 @@ const NarrowCard = ({ course }: NarrowCardProps) => {
             height={40}
           />
           <div className='ml-3'>
-            <p className='text-gray-900 leading-none'>{course.instructorName} In Development</p>
+            <p className='text-gray-900 leading-none'>
+              {course.instructorName} <span className='text-gray-600'>In</span>{' '}
+              <Link href={`/courses?search=${course.category}`} className='text-blue-500'>
+                {course.category}
+              </Link>
+            </p>
           </div>
         </div>
-        <div className='flex items-center mt-4'>
+        <div className='flex mt-6' style={{ justifyContent: 'space-between' }}>
           <span className='text-2xl font-bold text-gray-900'>${course.price}</span>
-          <span className='text-gray-500 line-through ml-2'>$120</span> {/* Replace this with your original price */}
+          <Link href={`/courses?search=${course.category}`} className='text-blue-500 hover:underline mt-4 inline-block'>
+            Learn More
+          </Link>
         </div>
-        <Link href='#' className='text-blue-500 hover:underline mt-4 inline-block'>
-          Learn More
-        </Link>
       </div>
     </div>
   )

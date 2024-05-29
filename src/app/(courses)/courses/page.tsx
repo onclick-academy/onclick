@@ -8,6 +8,7 @@ import { fetcher } from '@/utilities/fetcher'
 import Card from '../components/cards'
 import Pagination from '../components/Pagination'
 import CourseFeedLoader from './loading'
+import Link from 'next/link'
 
 const CoursesPage = () => {
   const [courses, setCourses] = React.useState([])
@@ -22,7 +23,8 @@ const CoursesPage = () => {
         url: `/courses?limit=10&offset=${(page - 1) * 10}`
       })
       setCourses(data.data.courses)
-      setTotalPages(Math.ceil(data.data.total / 10))
+      setTotalPages(Math.ceil(data.data.totalCourses / 10))
+      console.log('🚀 ~ fetcdsfgsfdgdsfgdfghCourses ~ data:', data)
     } catch (error) {
       console.error('Error fetching courses:', error)
     } finally {
@@ -40,13 +42,12 @@ const CoursesPage = () => {
 
   return (
     <div className='course-wrapper min-h-screen p-9 md:px-3'>
-      <Header />
       <div className='container'>
         <div className='mb-8'>
           <nav className='text-sm text-gray-600 mb-2'>
-            <a href='/' className='hover:underline'>
+            <Link href='/' className='hover:underline'>
               Home{' '}
-            </a>
+            </Link>
             / All Courses
           </nav>
           <h1 className='text-4xl font-bold mb-2'>All Courses</h1>
@@ -55,7 +56,7 @@ const CoursesPage = () => {
       </div>
       <div className='search-filter'>
         <CoursesSearch
-          setTotalPage={setTotalPages}
+          setTotalPages={setTotalPages}
           setIsLoading={setIsLoading}
           limit={10}
           offset={0}
