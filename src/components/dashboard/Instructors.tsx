@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {  Button, Tabs, TabsHeader, Tab } from '@material-tailwind/react'
+import { Button, Tabs, TabsHeader, Tab } from '@material-tailwind/react'
 import { useState, useEffect } from 'react'
 import { HiOutlineDotsVertical } from 'react-icons/hi'
 import Image from 'next/image'
@@ -64,7 +64,7 @@ export default function MembersTable() {
   const filteredItems = currentItems?.filter(instructor => {
     if (selectedTab === 'All') return true
     if (selectedTab === 'Approved') return instructor.isApprovedAsInstructor
-    if (selectedTab === 'Pending') return !instructor.isApprovedAsInstructor 
+    if (selectedTab === 'Pending') return !instructor.isApprovedAsInstructor
     return false
   })
 

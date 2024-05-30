@@ -114,8 +114,12 @@ export default function LoginPage() {
             </FormItem>
             {/* <a href="http://localhost:3001/auth/forgetpassword">forget your password?</a> */}
 
-            <a href="http://localhost:3001/forgetpassword" className="text-senary text-xs hover:text-primary hover:shadow-2xl">forget your password?</a>
-
+            <a
+              href='http://localhost:3001/forgetpassword'
+              className='text-senary text-xs hover:text-primary hover:shadow-2xl'
+            >
+              forget your password?
+            </a>
 
             <div className='flex justify-end'>
               <Button className='bg-primary hover:border-senary m-1' type='submit'>

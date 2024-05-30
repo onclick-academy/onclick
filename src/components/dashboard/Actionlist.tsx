@@ -89,7 +89,7 @@ export default function ComboboxDropdownMenu({ id, fetchCourses, param, method, 
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => handleApprove(id, method, param, 'decline', 'instructorId', id)}>
               <User className='mr-2 h-4 w-4' />
-             Decline
+              Decline
             </DropdownMenuItem>
             <DropdownMenuSeparator />
           </DropdownMenuGroup>

@@ -65,8 +65,6 @@ export default function MembersTable() {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage
   const currentItems = filteredItems?.slice(indexOfFirstItem, indexOfLastItem)
 
-  
-
   const TABS = [
     {
       label: 'All',
@@ -131,7 +129,7 @@ export default function MembersTable() {
       <div className='px-0  shadow-md mt-2'>
         <table className='mt-1 w-full min-w-max table-auto text-left shadow-md'>
           <thead className=''>
-            <tr >
+            <tr>
               {TABLE_HEAD.map(head => (
                 <th key={head} className='border-y border-gray bg-gray   p-4'>
                   <h2 className='font-normal leading-none opacity-70 text-sm'>{head}</h2>
@@ -139,7 +137,7 @@ export default function MembersTable() {
               ))}
             </tr>
           </thead>
-          <tbody >
+          <tbody>
             {currentItems?.map((course: Course, index: number) => {
               const isLast = index === courses.length - 1
               const classes = isLast ? 'p-4 ' : 'p-4 border-b border-blue-gray-50'

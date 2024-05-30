@@ -24,18 +24,15 @@ import {
 } from '@/components/ui/command'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { NavMenu } from '@/components/Hero/NavMenu'
-import getData from '@/utilities/getUserData'
+// import getData from '@/utilities/getUserData'
 import Btn from '@/constants/Btn'
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
   navigationMenuTriggerStyle
 } from '@/components/ui/navigation-menu'
-import * as React from 'react'
 
 export default function Header() {
   const [open, setOpen] = useState<boolean>(false)
@@ -86,84 +83,86 @@ export default function Header() {
 
   return (
     <>
-      <header className='container bg-transparent py-6 flex justify-between items-center z-10 relative'>
-        <div className='flex items-center gap-4'>
-          <Link href='#'>OnClick</Link>
-          <div className='hidden md:block'>
-            <NavMenu />
-          </div>
-        </div>
-
-        <div className='hidden md:block'>
-          <NavigationMenu>
-            <NavigationMenuList>
-              {links.map((link, index) => (
-                <NavigationMenuItem key={index}>
-                  <Link href={link.href} passHref>
-                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>{link.title}</NavigationMenuLink>
-                  </Link>
-                </NavigationMenuItem>
-              ))}
-            </NavigationMenuList>
-          </NavigationMenu>
-        </div>
-
-        <div className='flex items-center gap-5'>
-          <button onClick={togleOpen}>
-            <Search width={30} />
-          </button>
-
-          {userData ? (
-            <div className='gap-2 hidden md:flex'>
-              <Btn className='px-5 py-3'>
-                <Link href='#'>Login</Link>
-              </Btn>
-              <Btn className='px-5 py-3'>
-                <Link href='#'>Signup</Link>
-              </Btn>
+      <header className='w-screen py-6 z-10'>
+        <div className='container mx-auto flex justify-between items-center'>
+          <div className='flex items-center gap-4'>
+            <Link href='#'>OnClick</Link>
+            <div className='hidden md:block'>
+              <NavMenu />
             </div>
-          ) : (
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Avatar>
-                  <AvatarImage src='https://github.com/shadcn.png' className='z-10' />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Cart</DropdownMenuItem>
-                <DropdownMenuItem>Wishlist</DropdownMenuItem>
-                <DropdownMenuItem>Logout</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+          </div>
 
-          {/** Navmenu in small screens */}
-          <div className='flex md:hidden'>
-            <Sheet>
-              <SheetTrigger>
-                <IoIosMenu size={30} />
-              </SheetTrigger>
-              <SheetContent>
-                <SheetHeader>
-                  <SheetTitle>
-                    <Link href='#'>My Account</Link>
-                  </SheetTitle>
-                  <SheetTitle>
-                    <Link href='#'>Cart</Link>
-                  </SheetTitle>
-                  <SheetTitle>
-                    <Link href='#'>Wishlist</Link>
-                  </SheetTitle>
-                  <SheetTitle>
-                    <Link href='#'>Logout</Link>
-                  </SheetTitle>
-                </SheetHeader>
-              </SheetContent>
-            </Sheet>
+          <div className='hidden md:block'>
+            <NavigationMenu>
+              <NavigationMenuList>
+                {links.map((link, index) => (
+                  <NavigationMenuItem key={index}>
+                    <Link href={link.href} passHref>
+                      <NavigationMenuLink className={navigationMenuTriggerStyle()}>{link.title}</NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                ))}
+              </NavigationMenuList>
+            </NavigationMenu>
+          </div>
+
+          <div className='flex items-center gap-5'>
+            <button onClick={togleOpen}>
+              <Search width={30} />
+            </button>
+
+            {userData ? (
+              <div className='gap-2 hidden md:flex'>
+                <Btn className='px-5 py-3'>
+                  <Link href='#'>Login</Link>
+                </Btn>
+                <Btn className='px-5 py-3'>
+                  <Link href='#'>Signup</Link>
+                </Btn>
+              </div>
+            ) : (
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <Avatar>
+                    <AvatarImage src='https://github.com/shadcn.png' className='z-10' />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Profile</DropdownMenuItem>
+                  <DropdownMenuItem>Cart</DropdownMenuItem>
+                  <DropdownMenuItem>Wishlist</DropdownMenuItem>
+                  <DropdownMenuItem>Logout</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
+            {/** Navmenu in small screens */}
+            <div className='flex md:hidden'>
+              <Sheet>
+                <SheetTrigger>
+                  <IoIosMenu size={30} />
+                </SheetTrigger>
+                <SheetContent>
+                  <SheetHeader>
+                    <SheetTitle>
+                      <Link href='#'>My Account</Link>
+                    </SheetTitle>
+                    <SheetTitle>
+                      <Link href='#'>Cart</Link>
+                    </SheetTitle>
+                    <SheetTitle>
+                      <Link href='#'>Wishlist</Link>
+                    </SheetTitle>
+                    <SheetTitle>
+                      <Link href='#'>Logout</Link>
+                    </SheetTitle>
+                  </SheetHeader>
+                </SheetContent>
+              </Sheet>
+            </div>
           </div>
         </div>
       </header>
