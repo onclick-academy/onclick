@@ -15,10 +15,10 @@ type CourseSearchProps = {
   offset: number
   limit: number
   setIsLoading: (loading: boolean) => void
-  setTotalPage: (totalPages: number) => void
+  setTotalPages: (totalPages: number) => void
 }
 
-const CoursesSearch = ({ setTotalPage, setCourses, offset, limit, setIsLoading }: CourseSearchProps) => {
+const CoursesSearch = ({ setTotalPages, setCourses, offset, limit, setIsLoading }: CourseSearchProps) => {
   const [hidden, setHidden] = useState(true)
   const [categories, setCategories] = useState<Category[]>([])
   const [searchTerm, setSearchTerm] = useState('')
@@ -37,11 +37,9 @@ const CoursesSearch = ({ setTotalPage, setCourses, offset, limit, setIsLoading }
   const fetchCourses = async (search: string, category: string = '') => {
     try {
       setIsLoading(true)
-      const url = `/courses/search?offset=${offset}&limit=${limit}&search=${search}${
-        category ? `&category=${category}` : ''
-      }`
+      const url = `/courses?search=${search}&offset=${offset}&limit=${limit}`
       const data = await fetcher({ url })
-      setCourses(data.data)
+      setCourses(data.data.courses)
       if (category == '') setSelectedCategory('')
     } catch (error) {
       console.error('Error fetching courses:', error)
@@ -58,7 +56,7 @@ const CoursesSearch = ({ setTotalPage, setCourses, offset, limit, setIsLoading }
       const url = `/courses/category/${category.id}?offset=${offset}&limit=${limit}`
       const data = await fetcher({ url })
       setCourses(data.data)
-      setTotalPage(Math.ceil(data.data.length / limit))
+      setTotalPages(Math.ceil(data.data.totalCourses / 10))
     } catch (error) {
       console.error('Error fetching courses:', error)
     } finally {
