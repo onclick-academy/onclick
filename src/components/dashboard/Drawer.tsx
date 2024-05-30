@@ -66,13 +66,17 @@ export default function DrawerDemo(props: Data) {
     return (
       <div className='flex gap-8 items-center mt-8 text-nowrap'>
         <div className='flex flex-col gap-4'>
-          {Object.keys(propsObject).map((key) => (
-            <h2 key={key} className='text-md font-normal capitalize'>{key}:</h2>
+          {Object.keys(propsObject).map(key => (
+            <h2 key={key} className='text-md font-normal capitalize'>
+              {key}:
+            </h2>
           ))}
         </div>
         <div className='flex flex-col gap-5 capitalize text-nowrap'>
           {Object.values(propsObject).map((value, index) => (
-            <p key={index} className='text-sm font-normal capitalize'>{value}</p>
+            <p key={index} className='text-sm font-normal capitalize'>
+              {value}
+            </p>
           ))}
         </div>
       </div>
@@ -97,8 +101,8 @@ export default function DrawerDemo(props: Data) {
               {component === 'course'
                 ? renderProps(courseProps)
                 : component === 'instructor'
-                ? renderProps(instructorProps)
-                : null}
+                  ? renderProps(instructorProps)
+                  : null}
             </div>
           </div>
           <DrawerFooter className='bg flex flex-row justify-center'>

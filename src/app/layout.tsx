@@ -28,8 +28,8 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={`${inter.className} bg-hero bg-fixed h-auto`}>
-      <Header/>
-      {children}
+        <Header />
+        {children}
       </body>
     </html>
   )

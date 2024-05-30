@@ -12,7 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import {
   CommandDialog,
@@ -20,15 +20,9 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
-  CommandList,
+  CommandList
 } from '@/components/ui/command'
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { NavMenu } from '@/components/Hero/NavMenu'
 // import getData from '@/utilities/getUserData'
 import Btn from '@/constants/Btn'
@@ -37,7 +31,7 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  navigationMenuTriggerStyle,
+  navigationMenuTriggerStyle
 } from '@/components/ui/navigation-menu'
 
 export default function Header() {
@@ -47,20 +41,20 @@ export default function Header() {
   const links = [
     {
       title: 'Home',
-      href: '#',
+      href: '#'
     },
     {
       title: 'Courses',
-      href: '#courses',
+      href: '#courses'
     },
     {
       title: 'News',
-      href: '#news',
+      href: '#news'
     },
     {
       title: 'Events',
-      href: '#events',
-    },
+      href: '#events'
+    }
   ]
 
   useEffect(() => {
@@ -89,16 +83,16 @@ export default function Header() {
 
   return (
     <>
-      <header className="w-screen py-6 z-10">
-        <div className="container mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <Link href="#">OnClick</Link>
-            <div className="hidden md:block">
+      <header className='w-screen py-6 z-10'>
+        <div className='container mx-auto flex justify-between items-center'>
+          <div className='flex items-center gap-4'>
+            <Link href='#'>OnClick</Link>
+            <div className='hidden md:block'>
               <NavMenu />
             </div>
           </div>
 
-          <div className="hidden md:block">
+          <div className='hidden md:block'>
             <NavigationMenu>
               <NavigationMenuList>
                 {links.map((link, index) => (
@@ -112,26 +106,25 @@ export default function Header() {
             </NavigationMenu>
           </div>
 
-          <div className="flex items-center gap-5">
+          <div className='flex items-center gap-5'>
             <button onClick={togleOpen}>
               <Search width={30} />
             </button>
 
             {userData ? (
-              <div className="gap-2 hidden md:flex">
-                <Btn className="px-5 py-3">
-                  <Link href="#">Login</Link>
+              <div className='gap-2 hidden md:flex'>
+                <Btn className='px-5 py-3'>
+                  <Link href='#'>Login</Link>
                 </Btn>
-                <Btn className="px-5 py-3">
-                  <Link href="#">Signup</Link>
+                <Btn className='px-5 py-3'>
+                  <Link href='#'>Signup</Link>
                 </Btn>
               </div>
             ) : (
               <DropdownMenu>
                 <DropdownMenuTrigger>
                   <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png"
-                                 className="z-10" />
+                    <AvatarImage src='https://github.com/shadcn.png' className='z-10' />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
@@ -147,7 +140,7 @@ export default function Header() {
             )}
 
             {/** Navmenu in small screens */}
-            <div className="flex md:hidden">
+            <div className='flex md:hidden'>
               <Sheet>
                 <SheetTrigger>
                   <IoIosMenu size={30} />
@@ -155,16 +148,16 @@ export default function Header() {
                 <SheetContent>
                   <SheetHeader>
                     <SheetTitle>
-                      <Link href="#">My Account</Link>
+                      <Link href='#'>My Account</Link>
                     </SheetTitle>
                     <SheetTitle>
-                      <Link href="#">Cart</Link>
+                      <Link href='#'>Cart</Link>
                     </SheetTitle>
                     <SheetTitle>
-                      <Link href="#">Wishlist</Link>
+                      <Link href='#'>Wishlist</Link>
                     </SheetTitle>
                     <SheetTitle>
-                      <Link href="#">Logout</Link>
+                      <Link href='#'>Logout</Link>
                     </SheetTitle>
                   </SheetHeader>
                 </SheetContent>
@@ -174,12 +167,12 @@ export default function Header() {
         </div>
       </header>
 
-      <div className="max-w-xl h-fit absolute left-1/2 transform -translate-x-1/2 z-10">
+      <div className='max-w-xl h-fit absolute left-1/2 transform -translate-x-1/2 z-10'>
         <CommandDialog open={open} onOpenChange={setOpen}>
-          <CommandInput placeholder="Type a command or search..." />
+          <CommandInput placeholder='Type a command or search...' />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
-            <CommandGroup heading="Suggestions">
+            <CommandGroup heading='Suggestions'>
               <CommandItem>Calendar</CommandItem>
               <CommandItem>Search Emoji</CommandItem>
               <CommandItem>Calculator</CommandItem>

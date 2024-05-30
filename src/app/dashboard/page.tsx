@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/command'
 
 export default function CommandDemo() {
-  const [activeItem, setActiveItem] = useState('Courses') 
+  const [activeItem, setActiveItem] = useState('Courses')
 
   const handleItemClick = (itemName: string) => {
     setActiveItem(itemName)
